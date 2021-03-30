@@ -1,0 +1,8 @@
+use_frameworks!
+
+platform :ios, '11.0'
+
+target 'CLIPlayer_Example' do
+  pod 'Player', git: 'https://github.com/buubui/Player', branch: 'ios-11'
+  pod 'CLIPlayer', :path => '../'
+end

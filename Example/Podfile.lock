@@ -1,0 +1,35 @@
+PODS:
+  - CLIPlayer (0.1.0):
+    - Player (~> 0.14.0)
+    - YTVimeoExtractor (~> 1.2.0)
+  - Player (0.14.0)
+  - YTVimeoExtractor (1.2.0)
+
+DEPENDENCIES:
+  - CLIPlayer (from `../`)
+  - Player (from `https://github.com/buubui/Player`, branch `ios-11`)
+
+SPEC REPOS:
+  trunk:
+    - YTVimeoExtractor
+
+EXTERNAL SOURCES:
+  CLIPlayer:
+    :path: "../"
+  Player:
+    :branch: ios-11
+    :git: https://github.com/buubui/Player
+
+CHECKOUT OPTIONS:
+  Player:
+    :commit: 966c92d11cdaf82a7ba8e2160bf2b4aa16ad53be
+    :git: https://github.com/buubui/Player
+
+SPEC CHECKSUMS:
+  CLIPlayer: f44138c63302f3d913d29e6a8190d9a066ae4b66
+  Player: 4f8c299a4ab807c3ca52a098995db8c584ff8781
+  YTVimeoExtractor: f4ed90f43e08d33d56c1d1aff3f4f64663747966
+
+PODFILE CHECKSUM: ec32ede2190d49a11134ec31061ffa0b630a30f8
+
+COCOAPODS: 1.10.1
