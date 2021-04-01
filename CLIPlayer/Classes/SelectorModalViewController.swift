@@ -37,6 +37,8 @@ class SelectorModalViewController: UIViewController {
     super.viewDidLoad()
 //    tableView.reloadData()
     titleLabel.text = title
+    tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1))
+    tableView.tableFooterView?.backgroundColor = .clear
   }
 
   @IBAction func viewOutsideDidTapped(_ sender: Any) {
@@ -58,8 +60,11 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = UITableViewCell()
+    cell.backgroundColor = .darkGray
     let item = items[indexPath.row]
     cell.textLabel?.text = item.title
+    cell.textLabel?.textColor = .white
+    cell.tintColor = .white
     if item.selected {
       cell.accessoryType = .checkmark
     }
