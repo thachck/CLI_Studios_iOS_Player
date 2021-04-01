@@ -13,8 +13,8 @@ class CLIProgressSlider: UISlider {
   var minTrackStartColor = UIColor(red: 4.0/256, green: 118.0/256, blue: 177.0/256, alpha: 1)
   var minTrackEndColor = UIColor(red: 32.0/256, green: 248.0/256, blue: 225.0/256, alpha: 1)
   var thumbColor = UIColor(red: 32.0/256, green: 248.0/256, blue: 225.0/256, alpha: 1)
-  var normalThumbWidth = 13
-  var highlightedThumbWidth = 19
+  var normalThumbWidth = 15
+  var highlightedThumbWidth = 23
 
   override func draw(_ rect: CGRect) {
     super.draw(rect)

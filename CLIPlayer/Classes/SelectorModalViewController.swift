@@ -30,12 +30,10 @@ class SelectorModalViewController: UIViewController {
   convenience init() {
     self.init(nibName: String(describing: Self.self), bundle: Bundle(for: Self.self))
     modalPresentationStyle = .overCurrentContext
-//    transitioningDelegate = self
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
-//    tableView.reloadData()
     titleLabel.text = title
     tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1))
     tableView.tableFooterView?.backgroundColor = .clear
@@ -57,6 +55,7 @@ class SelectorModalViewController: UIViewController {
 extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSource {
   func numberOfSections(in tableView: UITableView) -> Int { 1 }
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = UITableViewCell()
@@ -76,5 +75,5 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
     let item = items[indexPath.row]
     item.handler(item)
     closeModal()
-  }
+  }  
 }
