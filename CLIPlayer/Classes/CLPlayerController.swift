@@ -47,6 +47,11 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var bottomControlsView: UIStackView!
   @IBOutlet weak var progressContainerView: UIStackView!
   @IBOutlet weak var bottomControlButtonsContainerView: UIStackView!
+  public var forceLandscape = true
+  public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    forceLandscape ? .landscape : .all
+  }
+  public override var shouldAutorotate: Bool { true }
 
   var player: Player!
   public var initialTimeInterval: TimeInterval = 0
@@ -120,6 +125,7 @@ public class CLIPlayerController: UIViewController {
   convenience init() {
     self.init(nibName: String(describing: Self.self), bundle: Bundle(for: Self.self))
     modalPresentationStyle = .fullScreen
+    modalTransitionStyle = .crossDissolve
     _ = self.view
   }
 
@@ -152,18 +158,22 @@ public class CLIPlayerController: UIViewController {
     hideControls(true)
   }
 
+  private var isLandscape: Bool {
+    forceLandscape ? true : UIDevice.current.orientation.isLandscape
+  }
+
   private func setUpUI() {
     setUpCloseButton()
     setUpCurrentTimeLabel()
   }
 
   private func setUpCloseButton() {
-    closeButton.isHidden =  UIDevice.current.orientation.isLandscape
+    closeButton.isHidden =  isLandscape
     endClassButton.isHidden = !closeButton.isHidden
   }
 
   private func setUpCurrentTimeLabel() {
-    if UIDevice.current.orientation.isLandscape {
+    if isLandscape {
       bottomControlButtonsContainerView.insertArrangedSubview(currentTimeLabel, at: 4)
     } else {
       progressContainerView.addArrangedSubview(currentTimeLabel)
