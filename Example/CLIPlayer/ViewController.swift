@@ -11,15 +11,6 @@ import CLIPlayer
 
 class ViewController: UIViewController {
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-  }
-
   @IBAction func playHLSTapped(_ sender: Any) {
     let videoUrl = URL(string: "https://d2t9el598942m2.cloudfront.net/MovementSpeaks_2221_Brandon_Oneal_BegJazz/MovementSpeaks_2221_Brandon_Oneal_BegJazz.m3u8")
     let player = CLIPlayerController()

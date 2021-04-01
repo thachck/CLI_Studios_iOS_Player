@@ -30,6 +30,7 @@ class SelectorModalViewController: UIViewController {
   convenience init() {
     self.init(nibName: String(describing: Self.self), bundle: Bundle(for: Self.self))
     modalPresentationStyle = .overCurrentContext
+    modalTransitionStyle = .crossDissolve
   }
 
   override func viewDidLoad() {
@@ -75,5 +76,5 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
     let item = items[indexPath.row]
     item.handler(item)
     closeModal()
-  }  
+  }
 }

@@ -38,23 +38,23 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FqO-Sx-DXO" userLabel="Controls View">
-                    <rect key="frame" x="44" y="-5" width="756" height="369"/>
+                    <rect key="frame" x="44" y="0.0" width="756" height="369"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="YE9-CA-IkV" userLabel="Bottom Controls Stack View">
-                            <rect key="frame" x="10" y="294" width="736" height="75"/>
+                            <rect key="frame" x="10" y="289" width="736" height="80"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="mLR-SA-BYD">
                                     <rect key="frame" x="0.0" y="0.0" width="736" height="31"/>
                                     <subviews>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Pkz-Tu-k0A" customClass="CLIProgressSlider" customModule="CLIPlayer" customModuleProvider="target">
-                                            <rect key="frame" x="-2" y="0.0" width="692.66666666666663" height="32"/>
+                                            <rect key="frame" x="-2" y="0.0" width="686.33333333333337" height="32"/>
                                             <connections>
                                                 <action selector="progressSliderValueChanged:forEvent:" destination="-1" eventType="valueChanged" id="Fxn-Bq-DFs"/>
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tc8-AA-A3v">
-                                            <rect key="frame" x="693.66666666666663" y="0.0" width="42.333333333333371" height="31"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                            <rect key="frame" x="687.33333333333337" y="0.0" width="48.666666666666629" height="31"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -64,13 +64,13 @@
                                         <constraint firstItem="tc8-AA-A3v" firstAttribute="height" secondItem="Pkz-Tu-k0A" secondAttribute="height" id="MiD-ug-nyf"/>
                                     </constraints>
                                 </stackView>
-                                <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="zF8-JE-UqP">
-                                    <rect key="frame" x="0.0" y="40" width="736" height="35"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="zF8-JE-UqP">
+                                    <rect key="frame" x="0.0" y="40" width="736" height="40"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5yU-j8-gO7" userLabel="Rewind">
-                                            <rect key="frame" x="0.0" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5yU-j8-gO7" userLabel="Rewind" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="cQO-lE-BiS"/>
+                                                <constraint firstAttribute="width" secondItem="5yU-j8-gO7" secondAttribute="height" multiplier="1:1" id="l86-wb-eyt"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-rewind">
@@ -80,10 +80,10 @@
                                                 <action selector="rewindButtonTapped:" destination="-1" eventType="touchUpInside" id="HIQ-EV-tJJ"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KiT-9P-gxs" userLabel="Play">
-                                            <rect key="frame" x="37" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KiT-9P-gxs" userLabel="Play" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="44" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="ruJ-OC-5L9"/>
+                                                <constraint firstAttribute="width" secondItem="KiT-9P-gxs" secondAttribute="height" multiplier="1:1" id="D3q-5J-BaN"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-play">
@@ -93,10 +93,10 @@
                                                 <action selector="playButtonTapped:" destination="-1" eventType="touchUpInside" id="tU3-OL-QHf"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sDp-Mq-daS" userLabel="Forward">
-                                            <rect key="frame" x="74" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sDp-Mq-daS" userLabel="Forward" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="88" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="kzg-qB-f1t"/>
+                                                <constraint firstAttribute="width" secondItem="sDp-Mq-daS" secondAttribute="height" multiplier="1:1" id="dUI-Gp-DmA"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-fast-forward">
@@ -106,10 +106,10 @@
                                                 <action selector="forwardButtonTapped:" destination="-1" eventType="touchUpInside" id="vOB-uW-Ico"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="USr-03-3xk" userLabel="Volume">
-                                            <rect key="frame" x="111" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="USr-03-3xk" userLabel="Volume" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="132" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="YjW-lg-aBt"/>
+                                                <constraint firstAttribute="width" secondItem="USr-03-3xk" secondAttribute="height" multiplier="1:1" id="4P3-ZQ-swa"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-volume">
@@ -120,13 +120,13 @@
                                             </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FXq-cj-UOi" userLabel="Space">
-                                            <rect key="frame" x="148" y="0.0" width="374" height="35"/>
+                                            <rect key="frame" x="176.00000000000003" y="0.0" width="312.66666666666674" height="40"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vwk-cz-AdE" userLabel="Quality">
-                                            <rect key="frame" x="525.66666666666663" y="0.0" width="30" height="35"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vwk-cz-AdE" userLabel="Quality" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="490.66666666666663" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="A1c-Q8-0Cu"/>
+                                                <constraint firstAttribute="width" secondItem="vwk-cz-AdE" secondAttribute="height" multiplier="1:1" id="Gvg-Wn-Qso"/>
                                             </constraints>
                                             <state key="normal" image="plyr-settings">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -135,10 +135,10 @@
                                                 <action selector="qualityButtonTapped:" destination="-1" eventType="touchUpInside" id="U28-3v-zys"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dw6-Fl-Tnk" userLabel="Mirror">
-                                            <rect key="frame" x="529" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dw6-Fl-Tnk" userLabel="Mirror" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="492.66666666666663" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="vff-GH-nLH"/>
+                                                <constraint firstAttribute="width" secondItem="Dw6-Fl-Tnk" secondAttribute="height" multiplier="1:1" id="sFP-kB-SES"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-flip">
@@ -148,10 +148,10 @@
                                                 <action selector="mirrorButtonTapped:" destination="-1" eventType="touchUpInside" id="qQ3-FP-UxQ"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sA8-jY-Kek" userLabel="Speed">
-                                            <rect key="frame" x="566" y="0.0" width="30" height="35"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sA8-jY-Kek" userLabel="Speed" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                            <rect key="frame" x="536.66666666666663" y="0.0" width="40" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="h4z-SZ-JXJ"/>
+                                                <constraint firstAttribute="width" secondItem="sA8-jY-Kek" secondAttribute="height" multiplier="1:1" id="Q1c-Dk-82p"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="plyr-speed-1.0x">
@@ -161,34 +161,49 @@
                                                 <action selector="speedButtonTapped:" destination="-1" eventType="touchUpInside" id="p8y-lx-4pk"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krA-jm-T4y">
-                                            <rect key="frame" x="603" y="0.0" width="133" height="35"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="35" id="miS-1v-fge"/>
-                                                <constraint firstAttribute="width" constant="133" id="rgE-or-KYc"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <state key="normal" title="End Class" backgroundImage="end-class">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="closeButtonTapped:" destination="-1" eventType="touchUpInside" id="e9W-ql-NDe"/>
-                                                <action selector="speedButtonTapped:" destination="-1" eventType="touchUpInside" id="Vqx-ID-D97"/>
-                                            </connections>
-                                        </button>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q7k-ej-fTE">
+                                            <rect key="frame" x="580.66666666666663" y="0.0" width="155.33333333333337" height="40"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="phm-rd-N4V">
+                                                    <rect key="frame" x="0.0" y="0.0" width="6" height="40"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="6" id="gWR-QG-ujd"/>
+                                                    </constraints>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krA-jm-T4y">
+                                                    <rect key="frame" x="6" y="0.0" width="149.33333333333334" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="krA-jm-T4y" secondAttribute="height" multiplier="56:15" id="I9H-Ja-L4Q"/>
+                                                        <constraint firstAttribute="height" constant="40" id="ihB-vk-Rwj"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="End Class" backgroundImage="end-class">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="closeButtonTapped:" destination="-1" eventType="touchUpInside" id="e9W-ql-NDe"/>
+                                                        <action selector="speedButtonTapped:" destination="-1" eventType="touchUpInside" id="Vqx-ID-D97"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="s4m-Mc-HE8"/>
+                                    </constraints>
                                 </stackView>
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QxY-d7-GRI" userLabel="Top Controls Stack View">
-                            <rect key="frame" x="10" y="0.0" width="736" height="50"/>
+                            <rect key="frame" x="10" y="0.0" width="736" height="48"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kd4-II-wLE" userLabel="fill mode">
-                                    <rect key="frame" x="0.0" y="0.0" width="40" height="50"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kd4-II-wLE" userLabel="fill mode" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="40" id="N5w-Bq-HXq"/>
+                                        <constraint firstAttribute="width" secondItem="kd4-II-wLE" secondAttribute="height" multiplier="1:1" id="p93-j3-beh"/>
                                     </constraints>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="rectangle.inset.fill" catalog="system">
@@ -199,11 +214,11 @@
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muP-Uy-DP1">
-                                    <rect key="frame" x="40" y="0.0" width="666" height="50"/>
+                                    <rect key="frame" x="48" y="0.0" width="658" height="48"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AyE-2c-7MJ">
-                                    <rect key="frame" x="706" y="0.0" width="30" height="50"/>
+                                    <rect key="frame" x="706" y="0.0" width="30" height="48"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                     <state key="normal" title="✕">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -233,11 +248,11 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="FqO-Sx-DXO" secondAttribute="bottom" constant="5" id="3d3-SM-G6r"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="FqO-Sx-DXO" secondAttribute="bottom" id="3d3-SM-G6r"/>
                 <constraint firstItem="FqO-Sx-DXO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="CEN-f8-pfK"/>
                 <constraint firstItem="ShD-Ye-s03" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Eqa-ke-U7u"/>
                 <constraint firstItem="ShD-Ye-s03" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="Shr-4x-BEk"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="FqO-Sx-DXO" secondAttribute="top" constant="5" id="fWs-zf-e04"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="FqO-Sx-DXO" secondAttribute="top" id="fWs-zf-e04"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="FqO-Sx-DXO" secondAttribute="trailing" id="kp8-IJ-Dzv"/>
                 <constraint firstAttribute="bottom" secondItem="ShD-Ye-s03" secondAttribute="bottom" id="ww5-1q-I5u"/>
                 <constraint firstItem="ShD-Ye-s03" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="yNP-6c-vEY"/>
