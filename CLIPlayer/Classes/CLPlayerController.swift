@@ -40,6 +40,7 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var volumeButton: UIButton!
   @IBOutlet weak var mirrorButton: UIButton!
   @IBOutlet weak var speedButton: UIButton!
+  @IBOutlet weak var fillModeButton: UIButton!
 
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var currentTimeLabel: UILabel!
@@ -279,6 +280,8 @@ public class CLIPlayerController: UIViewController {
   @IBAction func fillModeButtonTapped(_ sender: Any) {
     delayHidingControls()
     player.playerView.playerFillMode = player.playerView.playerFillMode == .resizeAspect ? .resizeAspectFill : .resizeAspect
+    let imageName = player.playerView.playerFillMode == .resizeAspect ? "plyr-enter-fullscreen" : "plyr-exit-fullscreen"
+    fillModeButton.setImage(UIImage(named: imageName, in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
   }
 
   @IBAction func speedButtonTapped(_ sender: Any) {

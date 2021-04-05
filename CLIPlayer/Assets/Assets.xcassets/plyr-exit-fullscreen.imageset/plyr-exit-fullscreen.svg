@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="27" height="21" viewBox="0 0 27 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 1 5.75 L 1 1 L 6.896 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1, 0, 0, -1, 7.896, 6.75)"/>
+  <path d="M 25.656 5.75 L 25.656 1 L 19.76 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1, 0, 0, -1, 45.416, 6.75)"/>
+  <path d="M 1 15.25 L 1 20 L 6.896 20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1, 0, 0, -1, 7.896, 35.25)"/>
+  <path d="M 25.656 15.25 L 25.656 20 L 19.76 20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1, 0, 0, -1, 45.416, 35.25)"/>
+</svg>

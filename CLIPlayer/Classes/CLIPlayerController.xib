@@ -16,6 +16,7 @@
                 <outlet property="controlsContainerView" destination="FqO-Sx-DXO" id="Tld-IP-DSH"/>
                 <outlet property="currentTimeLabel" destination="tc8-AA-A3v" id="DNw-fA-LGk"/>
                 <outlet property="endClassButton" destination="krA-jm-T4y" id="v6k-WH-r2E"/>
+                <outlet property="fillModeButton" destination="kd4-II-wLE" id="MuG-PB-fTw"/>
                 <outlet property="mirrorButton" destination="Dw6-Fl-Tnk" id="DKw-ap-8qQ"/>
                 <outlet property="playButton" destination="KiT-9P-gxs" id="qAT-FJ-MA8"/>
                 <outlet property="playerContainerView" destination="ShD-Ye-s03" id="lbF-bI-rjP"/>
@@ -41,7 +42,7 @@
                     <rect key="frame" x="44" y="0.0" width="756" height="369"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="YE9-CA-IkV" userLabel="Bottom Controls Stack View">
-                            <rect key="frame" x="10" y="289" width="736" height="80"/>
+                            <rect key="frame" x="10" y="284" width="736" height="80"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="mLR-SA-BYD">
                                     <rect key="frame" x="0.0" y="0.0" width="736" height="31"/>
@@ -206,7 +207,7 @@
                                         <constraint firstAttribute="width" secondItem="kd4-II-wLE" secondAttribute="height" multiplier="1:1" id="p93-j3-beh"/>
                                     </constraints>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <state key="normal" image="rectangle.inset.fill" catalog="system">
+                                    <state key="normal" image="plyr-enter-fullscreen">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
@@ -233,7 +234,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="YE9-CA-IkV" secondAttribute="bottom" id="WxZ-Rq-ppm"/>
+                        <constraint firstAttribute="bottom" secondItem="YE9-CA-IkV" secondAttribute="bottom" constant="5" id="WxZ-Rq-ppm"/>
                         <constraint firstItem="QxY-d7-GRI" firstAttribute="leading" secondItem="FqO-Sx-DXO" secondAttribute="leading" constant="10" id="XTd-A3-W3r"/>
                         <constraint firstItem="YE9-CA-IkV" firstAttribute="leading" secondItem="FqO-Sx-DXO" secondAttribute="leading" constant="10" id="YP1-AE-Ezu"/>
                         <constraint firstAttribute="trailing" secondItem="YE9-CA-IkV" secondAttribute="trailing" constant="10" id="j15-SE-Z3G"/>
@@ -267,6 +268,7 @@
     </objects>
     <resources>
         <image name="end-class" width="95" height="25"/>
+        <image name="plyr-enter-fullscreen" width="27" height="21"/>
         <image name="plyr-fast-forward" width="18" height="19"/>
         <image name="plyr-flip" width="18" height="16"/>
         <image name="plyr-play" width="12" height="16"/>
@@ -274,6 +276,5 @@
         <image name="plyr-settings" width="17" height="17"/>
         <image name="plyr-speed-1.0x" width="18" height="17"/>
         <image name="plyr-volume" width="19" height="16"/>
-        <image name="rectangle.inset.fill" catalog="system" width="128" height="93"/>
     </resources>
 </document>
