@@ -24,7 +24,16 @@ public struct CLIVideoQuality: Equatable {
   var bandwidth: Double = 0
   var url: URL?
   var title: String {
-    self == .zero ? "Auto" : "\(height)"
+    if self == .zero {
+      return "Auto"
+    } else {
+      switch height {
+      case 2160:
+        return "4K"
+      default:
+        return "\(height)p"
+      }
+    }
   }
   static var zero: CLIVideoQuality { CLIVideoQuality(width: 0, height: 0, bandwidth: 0) }
 }
