@@ -39,9 +39,9 @@ public struct CLIVideoQuality: Equatable {
 }
 
 public class CLIPlayerController: UIViewController {
+  //MARK: IBOutlets
   @IBOutlet weak var playerContainerView: UIView!
   @IBOutlet weak var controlsContainerView: UIView!
-
   @IBOutlet weak var playButton: UIButton!
   @IBOutlet weak var qualityButton: UIButton!
   @IBOutlet weak var closeButton: UIButton!
@@ -52,13 +52,18 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var fillModeButton: UIButton!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
-
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var currentTimeLabel: UILabel!
   @IBOutlet weak var topControlsView: UIStackView!
   @IBOutlet weak var bottomControlsView: UIStackView!
   @IBOutlet weak var progressContainerView: UIStackView!
   @IBOutlet weak var bottomControlButtonsContainerView: UIStackView!
+  //MARK: Properties
+  public var config: CLIPlayerConfig! {
+    didSet {
+      applyConfig()
+    }
+  }
   public var forceLandscape = true
   public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     forceLandscape ? .landscape : .all
@@ -144,6 +149,9 @@ public class CLIPlayerController: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     initPlayer()
+    if config == nil {
+      config = CLIPlayerConfig()
+    }
   }
 
   public override func viewWillAppear(_ animated: Bool) {
@@ -168,6 +176,13 @@ public class CLIPlayerController: UIViewController {
     player.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     player.didMove(toParent: self)
     hideControls(true)
+  }
+
+  func applyConfig() {
+    titleLabel.font = config.classTitleFont
+    descriptionLabel.font = config.classDescriptionFont
+    endClassButton.titleLabel?.font = config.endClassButtonFont
+    currentTimeLabel.font = config.currentTimeFont
   }
 
   private var isLandscape: Bool {
@@ -199,6 +214,11 @@ public class CLIPlayerController: UIViewController {
         self?.delayHidingControls()
       }
     }
+  }
+  
+  private func showSelectorModalController(_ modalController: SelectorModalViewController) {
+    present(modalController, animated: true, completion: nil)
+    modalController.config = config.selectorModalConfig
   }
 
   //MARK: Actions
@@ -251,8 +271,8 @@ public class CLIPlayerController: UIViewController {
         self?.currentQuality = quality
       }
     }
-
-    present(modalController, animated: true, completion: nil)
+    
+    showSelectorModalController(modalController)
   }
 
   @IBAction func progressSliderValueChanged(_ sender: UISlider, forEvent event: UIEvent) {
@@ -394,33 +414,20 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
 
 
 extension CLIPlayerController {
-  public func setClassTitle(_ text: String?, font: UIFont?) {
+  public func setClassTitle(_ text: String?) {
     titleLabel.text = text
-    if let font = font {
-      titleLabel.font = font
-    }
   }
 
-  public func setClassDescription(_ text: String?, font: UIFont?) {
+  public func setClassDescription(_ text: String?) {
     descriptionLabel.text = text
-    if let font = font {
-      descriptionLabel.font = font
-    }
   }
 
-  public func setClassDescription(artistName: String, duration: String, genre: String, level: String, font: UIFont?) {
+  public func setClassDescription(artistName: String, duration: String, genre: String, level: String) {
     let text = "\(artistName) | \(duration)\n\(genre) | \(level)"
-    setClassDescription(text, font: font)
+    setClassDescription(text)
   }
 
-  public func setEndClassButtonText(_ text: String?, font: UIFont?) {
+  public func setEndClassButtonText(_ text: String?) {
     endClassButton.setTitle(text, for: .normal)
-    if let font = font {
-      endClassButton.titleLabel?.font = font
-    }
-  }
-
-  public func setCurrentTimeLabelFont(_ font: UIFont) {
-    currentTimeLabel.font = font
   }
 }

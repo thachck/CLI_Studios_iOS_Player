@@ -18,6 +18,11 @@ class SelectorModalViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   var items: [SelectorModalItem] = []
   var isPresenting = false
+  var config: SelectorModalConfig! {
+    didSet {
+      applyConfig()
+    }
+  }
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -38,6 +43,13 @@ class SelectorModalViewController: UIViewController {
     titleLabel.text = title
     tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1))
     tableView.tableFooterView?.backgroundColor = .clear
+    if config == nil {
+      config = SelectorModalConfig()
+    }
+  }
+  
+  func applyConfig() {
+    titleLabel.font = config.titleFont
   }
 
   @IBAction func viewOutsideDidTapped(_ sender: Any) {
@@ -64,6 +76,7 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
     let item = items[indexPath.row]
     cell.textLabel?.text = item.title
     cell.textLabel?.textColor = .white
+    cell.textLabel?.font = config.itemFont
     cell.tintColor = .white
     if item.selected {
       cell.accessoryType = .checkmark
