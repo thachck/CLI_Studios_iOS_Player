@@ -15,12 +15,16 @@ class ViewController: UIViewController {
     let videoUrl = URL(string: "https://d2t9el598942m2.cloudfront.net/MovementSpeaks_2221_Brandon_Oneal_BegJazz/MovementSpeaks_2221_Brandon_Oneal_BegJazz.m3u8")
     let player = CLIPlayerController()
     player.url = videoUrl
+    player.setClassTitle("Movement Speaks: \"Do I Do\"", font: nil)
+    player.setClassDescription(artistName: "Brandon O'Neal", duration: "45:16", genre: "Jazz", level: "Beginner", font: nil)
     present(player, animated: true)
   }
 
   @IBAction func playVimeoTapped(_ sender: Any) {
     let player = CLIPlayerController()
     player.vimeoCode = "401102121"
+    player.setClassTitle("Too Good at Goodbyes", font: nil)
+    player.setClassDescription(artistName: "Mark Meismer", duration: "1:25:05", genre: "All Styles", level: "All Levels", font: nil)
     present(player, animated: true)
   }
 }

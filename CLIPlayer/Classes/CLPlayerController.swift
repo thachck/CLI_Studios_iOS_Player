@@ -50,6 +50,8 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var mirrorButton: UIButton!
   @IBOutlet weak var speedButton: UIButton!
   @IBOutlet weak var fillModeButton: UIButton!
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var descriptionLabel: UILabel!
 
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var currentTimeLabel: UILabel!
@@ -121,8 +123,8 @@ public class CLIPlayerController: UIViewController {
   private var vimeoSortedQualities: [Int] = []
   private let hlsParser = HLSParser()
   private var hidingControlTimer: Timer?
-  private var seekingTimer: Timer?
   private var sliderIsDragging = false
+  //MARK: Setups
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -174,20 +176,11 @@ public class CLIPlayerController: UIViewController {
 
   private func setUpUI() {
     setUpCloseButton()
-    setUpCurrentTimeLabel()
   }
 
   private func setUpCloseButton() {
     closeButton.isHidden =  isLandscape
     endClassButton.isHidden = !closeButton.isHidden
-  }
-
-  private func setUpCurrentTimeLabel() {
-    if isLandscape {
-      bottomControlButtonsContainerView.insertArrangedSubview(currentTimeLabel, at: 4)
-    } else {
-      progressContainerView.addArrangedSubview(currentTimeLabel)
-    }
   }
 
   private func hideControls(_ isHidden: Bool) {
@@ -200,21 +193,11 @@ public class CLIPlayerController: UIViewController {
       hidingControlTimer.invalidate()
     }
     hidingControlTimer = Timer.scheduledTimer(withTimeInterval: hideControlsTimeInterval, repeats: false) { [weak self] (timer) in
-      self?.topControlsView.isHidden = true
-      self?.bottomControlsView.isHidden = true
-    }
-  }
-
-  private func delaySeek() {
-    if let seekingTimer = seekingTimer {
-      seekingTimer.invalidate()
-    }
-    seekingTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] (timer) in
-      if let self = self {
-        let newTime = Double(self.progressSlider.value) * self.player.maximumDuration
-        self.player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+      if self?.player.playbackState == .playing {
+        self?.hideControls(true)
+      } else {
+        self?.delayHidingControls()
       }
-
     }
   }
 
@@ -282,8 +265,6 @@ public class CLIPlayerController: UIViewController {
       return
     }
     sliderIsDragging = true
-    // not ended yet
-    //    delaySeek()
   }
 
   @IBAction func fillModeButtonTapped(_ sender: Any) {
@@ -357,6 +338,8 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
       player.seek(to: CMTimeMake(value: Int64(initialTimeInterval), timescale: 1))
       initialTimeInterval = 0
     }
+    hideControls(false)
+    delayHidingControls()
   }
 
   public func playerPlaybackStateDidChange(_ player: Player) {
@@ -409,3 +392,35 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   }
 }
 
+
+extension CLIPlayerController {
+  public func setClassTitle(_ text: String?, font: UIFont?) {
+    titleLabel.text = text
+    if let font = font {
+      titleLabel.font = font
+    }
+  }
+
+  public func setClassDescription(_ text: String?, font: UIFont?) {
+    descriptionLabel.text = text
+    if let font = font {
+      descriptionLabel.font = font
+    }
+  }
+
+  public func setClassDescription(artistName: String, duration: String, genre: String, level: String, font: UIFont?) {
+    let text = "\(artistName) | \(duration)\n\(genre) | \(level)"
+    setClassDescription(text, font: font)
+  }
+
+  public func setEndClassButtonText(_ text: String?, font: UIFont?) {
+    endClassButton.setTitle(text, for: .normal)
+    if let font = font {
+      endClassButton.titleLabel?.font = font
+    }
+  }
+
+  public func setCurrentTimeLabelFont(_ font: UIFont) {
+    currentTimeLabel.font = font
+  }
+}
