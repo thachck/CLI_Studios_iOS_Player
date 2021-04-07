@@ -387,7 +387,7 @@
 			baseConfigurationReference = 5CB33A9CF8D3421C0C5B73D6 /* Pods-CLIPlayer_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = FQ3YMMKHG5;
 				INFOPLIST_FILE = CLIPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -404,7 +404,7 @@
 			baseConfigurationReference = A067164E8DCFD148F0AFF702 /* Pods-CLIPlayer_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = FQ3YMMKHG5;
 				INFOPLIST_FILE = CLIPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

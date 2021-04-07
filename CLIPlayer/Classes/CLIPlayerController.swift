@@ -55,10 +55,20 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var currentTimeLabel: UILabel!
   @IBOutlet weak var topControlsView: UIView!
-  @IBOutlet weak var bottomControlsView: UIStackView!
+  @IBOutlet weak var bottomControlsView: UIView!
   @IBOutlet weak var progressContainerView: UIStackView!
   @IBOutlet weak var bottomControlButtonsContainerView: UIStackView!
+  @IBOutlet weak var rewindInfoContainerView: UIStackView!
+  @IBOutlet weak var forwardInfoContainerView: UIStackView!
+  @IBOutlet weak var forwardOverlayContainerView: UIView!
+  @IBOutlet weak var rewindOverlayContainerView: UIView!
+  @IBOutlet weak var rewindArrowsContainer: UIStackView!
+  @IBOutlet weak var forwardArrowsContainer: UIStackView!
+  @IBOutlet weak var forwardOverlayLabel: UILabel!
+  @IBOutlet weak var rewindOverlayLabel: UILabel!
+  
   //MARK: Properties
+  public override var prefersStatusBarHidden: Bool { true }
   public var config: CLIPlayerConfig! {
     didSet {
       applyConfig()
@@ -177,6 +187,8 @@ public class CLIPlayerController: UIViewController {
     descriptionLabel.font = config.classDescriptionFont
     endClassButton.titleLabel?.font = config.endClassButtonFont
     currentTimeLabel.font = config.currentTimeFont
+    rewindOverlayLabel.font = config.seekOverlayFont
+    forwardOverlayLabel.font = config.seekOverlayFont
   }
 
   private var isLandscape: Bool {
@@ -272,7 +284,7 @@ public class CLIPlayerController: UIViewController {
   @IBAction func progressSliderValueChanged(_ sender: UISlider, forEvent event: UIEvent) {
     delayHidingControls()
     print("progressSliderValueChanged: ", progressSlider.value)
-    guard let touch = event.allTouches?.first, touch.phase != .ended else {
+    guard let touch = event.allTouches?.first, touch.phase != .ended, player.maximumDuration != .nan else {
       sliderIsDragging = false
       let newTime = Double(progressSlider.value) * player.maximumDuration
       player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
@@ -305,6 +317,16 @@ public class CLIPlayerController: UIViewController {
 
   @IBAction func closeButtonTapped(_ sender: Any) {
     dismiss(animated: true, completion: nil)
+  }
+  
+  @IBAction func rewindTapGestureTapped(_ sender: Any) {
+    rewindButtonTapped(sender)
+    animateOverlaySeekButton(container: rewindOverlayContainerView, infoView: rewindInfoContainerView, arrowsContainer: rewindArrowsContainer, toLeft: false)
+  }
+  
+  @IBAction func forwardTapGestureTapped(_ sender: Any) {
+    forwardButtonTapped(sender)
+    animateOverlaySeekButton(container: forwardOverlayContainerView, infoView: forwardInfoContainerView, arrowsContainer: forwardArrowsContainer, toLeft: true)
   }
 }
 
@@ -423,5 +445,39 @@ extension CLIPlayerController {
 
   public func setEndClassButtonText(_ text: String?) {
     endClassButton.setTitle(text, for: .normal)
+  }
+  
+  func animateOverlaySeekButton(container: UIView, infoView: UIView, arrowsContainer: UIStackView, toLeft: Bool) {
+    infoView.isHidden = false
+    infoView.alpha = 1
+    container.backgroundColor = .init(red: 1, green: 1, blue: 1, alpha: 0.4)
+    container.layer.cornerRadius = container.frame.height / 2
+    for subView in arrowsContainer.arrangedSubviews {
+      subView.alpha = 0
+    }
+    if toLeft {
+      arrowsContainer.arrangedSubviews[0].alpha = 1
+    } else {
+      arrowsContainer.arrangedSubviews[arrowsContainer.arrangedSubviews.count - 1].alpha = 1
+    }
+    let enumeratedItems = toLeft ? arrowsContainer.subviews.enumerated() : arrowsContainer.subviews.reversed().enumerated()
+    for (index, item) in enumeratedItems {
+      item.alpha = 0
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + (0.1 * Double(index))) {
+        UIView.animate(withDuration: 0.2) {
+          item.alpha = 1
+        } completion: { (completed) in
+          item.alpha = 0
+        }
+      }
+    }
+    
+    UIView.animate(withDuration: 1) {
+      infoView.alpha = 0
+      container.backgroundColor = .clear
+    } completion: { (completed) in
+      infoView.isHidden = true
+    }
   }
 }
