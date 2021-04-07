@@ -24,19 +24,13 @@ class SelectorModalViewController: UIViewController {
     }
   }
 
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-  }
-
-  required init?(coder: NSCoder) {
-    super.init(coder: coder)
-  }
-
-  convenience init() {
-    self.init(nibName: String(describing: Self.self), bundle: Bundle(for: Self.self))
-    modalPresentationStyle = .overCurrentContext
-    modalTransitionStyle = .crossDissolve
-  }
+  public class func instance() -> SelectorModalViewController {
+      let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle(for: Self.self))
+      let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! SelectorModalViewController
+      controller.modalPresentationStyle = .overCurrentContext
+      controller.modalTransitionStyle = .crossDissolve
+      return controller
+    }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -56,10 +50,6 @@ class SelectorModalViewController: UIViewController {
     closeModal()
   }
 
-  @IBAction func closeButtonTapped(_ sender: Any) {
-    closeModal()
-  }
-
   func closeModal() {
     dismiss(animated: true, completion: nil)
   }
@@ -71,16 +61,11 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = UITableViewCell()
-    cell.backgroundColor = .darkGray
+    let cell = tableView.dequeueReusableCell(withIdentifier: "SelectorCell") ?? UITableViewCell()
     let item = items[indexPath.row]
     cell.textLabel?.text = item.title
-    cell.textLabel?.textColor = .white
     cell.textLabel?.font = config.itemFont
-    cell.tintColor = .white
-    if item.selected {
-      cell.accessoryType = .checkmark
-    }
+    cell.accessoryType = item.selected ? .checkmark : .none
 
     return cell
   }

@@ -54,7 +54,7 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var currentTimeLabel: UILabel!
-  @IBOutlet weak var topControlsView: UIStackView!
+  @IBOutlet weak var topControlsView: UIView!
   @IBOutlet weak var bottomControlsView: UIStackView!
   @IBOutlet weak var progressContainerView: UIStackView!
   @IBOutlet weak var bottomControlButtonsContainerView: UIStackView!
@@ -130,21 +130,15 @@ public class CLIPlayerController: UIViewController {
   private var hidingControlTimer: Timer?
   private var sliderIsDragging = false
   //MARK: Setups
-
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-  }
-
-  required init?(coder: NSCoder) {
-    super.init(coder: coder)
-  }
-
-  convenience init() {
-    self.init(nibName: String(describing: Self.self), bundle: Bundle(for: Self.self))
-    modalPresentationStyle = .fullScreen
-    modalTransitionStyle = .crossDissolve
-    _ = self.view
-  }
+    
+  public class func instance() -> CLIPlayerController {
+      let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle(for: Self.self))
+      let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! CLIPlayerController
+      controller.modalPresentationStyle = .fullScreen
+      controller.modalTransitionStyle = .crossDissolve
+    _ = controller.view
+      return controller
+    }
 
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -263,7 +257,7 @@ public class CLIPlayerController: UIViewController {
 
   @IBAction func qualityButtonTapped(_ sender: Any) {
     delayHidingControls()
-    let modalController = SelectorModalViewController()
+    let modalController = SelectorModalViewController.instance()
     modalController.title = "Select Quality"
     modalController.items = videoQualities.map { (quality) -> SelectorModalItem in
       let title = quality.title
@@ -297,7 +291,7 @@ public class CLIPlayerController: UIViewController {
   @IBAction func speedButtonTapped(_ sender: Any) {
     delayHidingControls()
     let speeds: [Float] = [0.7, 0.8, 0.9, 1]
-    let modalController = SelectorModalViewController()
+    let modalController = SelectorModalViewController.instance()
     modalController.title = "Select Speed"
     modalController.items = speeds.map { (speed) -> SelectorModalItem in
       let title = speed == 1 ? "Normal" : "\(speed)x"
