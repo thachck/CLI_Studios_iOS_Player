@@ -19,18 +19,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="gas-Zf-k3W">
-                                <rect key="frame" x="149.5" y="288.5" width="76" height="90"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="gas-Zf-k3W">
+                                <rect key="frame" x="139" y="280" width="97" height="107"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PFj-oT-IkM">
-                                        <rect key="frame" x="0.0" y="0.0" width="76" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="97" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Play HLS"/>
                                         <connections>
                                             <action selector="playHLSTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="zY7-qZ-ynu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PxT-9L-EKD">
-                                        <rect key="frame" x="0.0" y="60" width="76" height="30"/>
+                                        <rect key="frame" x="0.0" y="71" width="97" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Play Vimeo"/>
                                         <connections>
                                             <action selector="playVimeoTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="vCz-I4-jm4"/>

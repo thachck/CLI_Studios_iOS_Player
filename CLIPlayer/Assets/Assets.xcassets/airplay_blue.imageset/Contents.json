@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "airplay_icon_thin_on_blue.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}

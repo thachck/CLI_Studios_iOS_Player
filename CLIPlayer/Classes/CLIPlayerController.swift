@@ -50,6 +50,7 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var mirrorButton: UIButton!
   @IBOutlet weak var speedButton: UIButton!
   @IBOutlet weak var fillModeButton: UIButton!
+  @IBOutlet weak var airPlayButton: CLIAirPlayButton!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var progressSlider: UISlider!
@@ -57,7 +58,6 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var topControlsView: UIView!
   @IBOutlet weak var bottomControlsView: UIView!
   @IBOutlet weak var progressContainerView: UIStackView!
-  @IBOutlet weak var bottomControlButtonsContainerView: UIStackView!
   @IBOutlet weak var rewindInfoContainerView: UIStackView!
   @IBOutlet weak var forwardInfoContainerView: UIStackView!
   @IBOutlet weak var forwardOverlayContainerView: UIView!
@@ -66,6 +66,8 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var forwardArrowsContainer: UIStackView!
   @IBOutlet weak var forwardOverlayLabel: UILabel!
   @IBOutlet weak var rewindOverlayLabel: UILabel!
+  @IBOutlet weak var topControlsStackView: UIStackView!
+  @IBOutlet weak var airPlayMaskView: UIView!
   
   //MARK: Properties
   public override var prefersStatusBarHidden: Bool { true }
@@ -79,7 +81,6 @@ public class CLIPlayerController: UIViewController {
     forceLandscape ? .landscape : .all
   }
   public override var shouldAutorotate: Bool { true }
-
   var player: Player!
   public var initialTimeInterval: TimeInterval = 0
   public var hideControlsTimeInterval: TimeInterval = 3
@@ -156,6 +157,17 @@ public class CLIPlayerController: UIViewController {
     if config == nil {
       config = CLIPlayerConfig()
     }
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(self.screenConnectionChanged(_:)), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self, name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
+  }
+  
+  @objc func volumeViewTapped(_ sender: Any?) {
+    print("volumeViewTapped")
+    delayHidingControls()
   }
 
   public override func viewWillAppear(_ animated: Bool) {
@@ -328,6 +340,11 @@ public class CLIPlayerController: UIViewController {
     forwardButtonTapped(sender)
     animateOverlaySeekButton(container: forwardOverlayContainerView, infoView: forwardInfoContainerView, arrowsContainer: forwardArrowsContainer, toLeft: true)
   }
+  
+  @IBAction func airplayButtonTapped(_ sender: Any) {
+    delayHidingControls()
+    airPlayButton.showAirPlayModal()
+  }
 }
 
 extension CLIPlayerController {
@@ -357,13 +374,20 @@ extension CLIPlayerController {
         self?.videoType = .vimeo
         let keys = (video.streamURLs.keys.compactMap { ($0 as? Int) }).sorted()
         self?.vimeoSortedQualities = keys
-        //        print("vimeo url----", video.streamURLs[keys[0]])
         self?.videoQualities = keys.map { CLIVideoQuality(width: 0, height: $0, bandwidth: 0, url: video.streamURLs[$0]) }
         if let lastQuality = self?.videoQualities.last {
           self?.currentQuality = lastQuality
         }
       }
     }
+  }
+  
+  @objc func screenConnectionChanged(_ notification: Notification) {
+    if airPlayButton.isWirelessRouteActive {
+      player.playFromCurrentTime()
+    }
+    mirrorButton.isHidden = airPlayButton.isWirelessRouteActive
+    airPlayMaskView.isHidden = !airPlayButton.isWirelessRouteActive
   }
 }
 
@@ -376,9 +400,13 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
     }
     hideControls(false)
     delayHidingControls()
+    if airPlayButton.isWirelessRouteActive {
+      player.playFromCurrentTime()
+    }
   }
 
   public func playerPlaybackStateDidChange(_ player: Player) {
+    print("playerPlaybackStateDidChange: ", player.playbackState)
     if player.playbackState == .playing {
       playButton.setImage(UIImage(named: "plyr-pause", in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
     } else {

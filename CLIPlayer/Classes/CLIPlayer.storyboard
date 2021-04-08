@@ -21,6 +21,37 @@
                                 <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxh-qV-0xa" userLabel="Airplay Mask View">
+                                <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                                <subviews>
+                                    <stackView opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="g2z-mC-OSG">
+                                        <rect key="frame" x="298" y="142.5" width="300" height="129"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="airplay_white" translatesAutoresizingMaskIntoConstraints="NO" id="gU3-lR-plj">
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="100" id="gYi-xj-SK9"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AirPlay" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="95X-gZ-ibx">
+                                                <rect key="frame" x="0.0" y="105" width="300" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="w0h-Og-sv4"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="g2z-mC-OSG" firstAttribute="centerX" secondItem="pxh-qV-0xa" secondAttribute="centerX" id="OR5-8h-nhN"/>
+                                    <constraint firstItem="g2z-mC-OSG" firstAttribute="centerY" secondItem="pxh-qV-0xa" secondAttribute="centerY" id="T4A-fH-Mko"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TlU-Rw-4zJ" userLabel="Controls View">
                                 <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                                 <subviews>
@@ -324,13 +355,13 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CQ2-Jp-15X" customClass="GradientView" customModule="CLIPlayer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="896" height="73"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="896" height="81"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jha-b9-bgX" userLabel="Top Controls Stack View">
-                                                <rect key="frame" x="62" y="6" width="772" height="52"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="jha-b9-bgX" userLabel="Top Controls Stack View">
+                                                <rect key="frame" x="62" y="6" width="772" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="kuW-z2-jaK">
-                                                        <rect key="frame" x="0.0" y="0.0" width="162.5" height="52"/>
+                                                        <rect key="frame" x="0.0" y="5.5" width="162.5" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Class Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ouv-dY-edg">
                                                                 <rect key="frame" x="0.0" y="0.0" width="162.5" height="17"/>
@@ -339,7 +370,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdf-pa-j8L">
-                                                                <rect key="frame" x="0.0" y="20" width="162.5" height="32"/>
+                                                                <rect key="frame" x="0.0" y="20" width="162.5" height="29"/>
                                                                 <string key="text">John Doe |49:48
 Contemporary | Intermediate </string>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -349,12 +380,29 @@ Contemporary | Intermediate </string>
                                                         </subviews>
                                                     </stackView>
                                                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="lwW-xi-lFf">
-                                                        <rect key="frame" x="162.5" y="0.0" width="579.5" height="52"/>
+                                                        <rect key="frame" x="166.5" y="5" width="517.5" height="50"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mia-cI-1mX" customClass="CLIAirPlayButton" customModule="CLIPlayer" customModuleProvider="target">
+                                                        <rect key="frame" x="688" y="10" width="40" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="40" id="876-LB-fFC"/>
+                                                            <constraint firstAttribute="width" secondItem="mia-cI-1mX" secondAttribute="height" multiplier="1:1" id="NsI-lq-Y0o"/>
+                                                        </constraints>
+                                                        <state key="normal" image="airplay_white">
+                                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <state key="selected" image="airplay_blue"/>
+                                                        <connections>
+                                                            <action selector="airplayButtonTapped:" destination="lZL-MP-MeT" eventType="touchUpInside" id="EyP-7F-hSW"/>
+                                                        </connections>
+                                                    </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Svs-Rj-Cdk">
-                                                        <rect key="frame" x="742" y="0.0" width="30" height="52"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                        <rect key="frame" x="732" y="0.0" width="40" height="60"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="40" id="BwD-wv-Qsl"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                         <state key="normal" title="✕">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
@@ -405,20 +453,26 @@ Contemporary | Intermediate </string>
                         <constraints>
                             <constraint firstItem="jRP-io-QEa" firstAttribute="top" secondItem="oLZ-wR-hkT" secondAttribute="top" id="7D0-TW-vhQ"/>
                             <constraint firstItem="LK8-yd-gHX" firstAttribute="trailing" secondItem="jha-b9-bgX" secondAttribute="trailing" constant="18" id="Bxu-3U-LJH"/>
+                            <constraint firstAttribute="bottom" secondItem="pxh-qV-0xa" secondAttribute="bottom" id="C1F-TK-bZH"/>
                             <constraint firstItem="jRP-io-QEa" firstAttribute="trailing" secondItem="oLZ-wR-hkT" secondAttribute="trailing" id="CsT-2l-5nD"/>
                             <constraint firstAttribute="top" secondItem="TlU-Rw-4zJ" secondAttribute="top" id="GYW-L1-NIO"/>
                             <constraint firstItem="BcG-wa-KiG" firstAttribute="trailing" secondItem="LK8-yd-gHX" secondAttribute="trailing" constant="-15" id="KGf-sI-lzs"/>
                             <constraint firstItem="LK8-yd-gHX" firstAttribute="leading" secondItem="BcG-wa-KiG" secondAttribute="leading" constant="-10" id="Mpo-Mn-7JF"/>
                             <constraint firstAttribute="bottom" secondItem="jRP-io-QEa" secondAttribute="bottom" id="NBq-yw-Eg6"/>
+                            <constraint firstItem="pxh-qV-0xa" firstAttribute="leading" secondItem="oLZ-wR-hkT" secondAttribute="leading" id="YNb-m4-XnD"/>
                             <constraint firstItem="jRP-io-QEa" firstAttribute="leading" secondItem="oLZ-wR-hkT" secondAttribute="leading" id="cLc-95-0gW"/>
                             <constraint firstItem="TlU-Rw-4zJ" firstAttribute="leading" secondItem="oLZ-wR-hkT" secondAttribute="leading" id="f1N-UW-2Rp"/>
                             <constraint firstAttribute="trailing" secondItem="TlU-Rw-4zJ" secondAttribute="trailing" id="gbA-xF-TV4"/>
                             <constraint firstAttribute="bottom" secondItem="TlU-Rw-4zJ" secondAttribute="bottom" id="mse-s7-v6l"/>
+                            <constraint firstItem="pxh-qV-0xa" firstAttribute="top" secondItem="oLZ-wR-hkT" secondAttribute="top" id="qR1-xP-4Zh"/>
+                            <constraint firstAttribute="trailing" secondItem="pxh-qV-0xa" secondAttribute="trailing" id="rEM-ux-1de"/>
                             <constraint firstItem="LK8-yd-gHX" firstAttribute="leading" secondItem="jha-b9-bgX" secondAttribute="leading" constant="-18" id="s9Q-fu-CRu"/>
                             <constraint firstItem="LK8-yd-gHX" firstAttribute="bottom" secondItem="BcG-wa-KiG" secondAttribute="bottom" constant="5" id="yvR-EX-ski"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="airPlayButton" destination="mia-cI-1mX" id="HZi-1X-rMe"/>
+                        <outlet property="airPlayMaskView" destination="pxh-qV-0xa" id="Wld-kl-h41"/>
                         <outlet property="bottomControlsView" destination="oHF-jl-mnz" id="yil-ST-HsA"/>
                         <outlet property="closeButton" destination="Svs-Rj-Cdk" id="OG7-6C-XBz"/>
                         <outlet property="controlsContainerView" destination="TlU-Rw-4zJ" id="r3m-mr-Q49"/>
@@ -442,6 +496,7 @@ Contemporary | Intermediate </string>
                         <outlet property="rewindOverlayLabel" destination="vTa-IF-qtA" id="Kb6-Yg-RVX"/>
                         <outlet property="speedButton" destination="T35-an-rFp" id="hkZ-ep-sC7"/>
                         <outlet property="titleLabel" destination="Ouv-dY-edg" id="UHs-DS-L4A"/>
+                        <outlet property="topControlsStackView" destination="jha-b9-bgX" id="OaJ-QR-NlJ"/>
                         <outlet property="topControlsView" destination="CQ2-Jp-15X" id="nCu-dI-0dh"/>
                         <outlet property="view" destination="oLZ-wR-hkT" id="dWJ-jt-FGL"/>
                         <outlet property="volumeButton" destination="vrM-dU-59k" id="Zfn-ok-i4t"/>
@@ -571,21 +626,21 @@ Contemporary | Intermediate </string>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="g8u-bh-gtU"/>
-                                <exclude reference="s0S-3t-ikq"/>
                                 <exclude reference="jO3-dB-DP7"/>
+                                <exclude reference="s0S-3t-ikq"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="constraints">
                                 <exclude reference="g8u-bh-gtU"/>
-                                <include reference="jO3-dB-DP7"/>
                                 <exclude reference="iOF-va-Nv6"/>
+                                <include reference="jO3-dB-DP7"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=regular">
                             <mask key="constraints">
-                                <include reference="s0S-3t-ikq"/>
                                 <include reference="iOF-va-Nv6"/>
+                                <include reference="s0S-3t-ikq"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact-widthClass=regular">
@@ -616,6 +671,8 @@ Contemporary | Intermediate </string>
         </scene>
     </scenes>
     <resources>
+        <image name="airplay_blue" width="750" height="750"/>
+        <image name="airplay_white" width="750" height="750"/>
         <image name="end-class" width="95" height="25"/>
         <image name="plyr-enter-fullscreen" width="27" height="21"/>
         <image name="plyr-fast-forward" width="18" height="19"/>
