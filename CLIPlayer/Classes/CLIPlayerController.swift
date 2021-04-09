@@ -11,6 +11,7 @@ import AVFoundation
 import Player
 import YTVimeoExtractor
 import AVKit
+import GoogleCast
 
 public enum CLIVideoType {
   case hls
@@ -28,10 +29,10 @@ public struct CLIVideoQuality: Equatable {
       return "Auto"
     } else {
       switch height {
-      case 2160:
-        return "4K"
-      default:
-        return "\(height)p"
+        case 2160:
+          return "4K"
+        default:
+          return "\(height)p"
       }
     }
   }
@@ -51,6 +52,8 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var speedButton: UIButton!
   @IBOutlet weak var fillModeButton: UIButton!
   @IBOutlet weak var airPlayButton: CLIAirPlayButton!
+  @IBOutlet weak var googleCastButton: CLIGoogleCastButton!
+
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var progressSlider: UISlider!
@@ -128,7 +131,7 @@ public class CLIPlayerController: UIViewController {
   public var currentSpeed: Float = 1.0 {
     didSet {
       player.rate = currentSpeed
-      speedButton.setImage(UIImage(named: String(format: "plyr-speed-%.1fx", currentSpeed), in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
+      speedButton.setImage(UIImage(named: String(format: "plyr-speed-%.1fx", currentSpeed), in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
     }
   }
   public var isMirrored = false {
@@ -143,15 +146,15 @@ public class CLIPlayerController: UIViewController {
   private var hidingControlTimer: Timer?
   private var sliderIsDragging = false
   //MARK: Setups
-    
+
   public class func instance() -> CLIPlayerController {
-      let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle(for: Self.self))
-      let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! CLIPlayerController
-      controller.modalPresentationStyle = .fullScreen
-      controller.modalTransitionStyle = .crossDissolve
+    let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle.cliPlayerBundle)
+    let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! CLIPlayerController
+    controller.modalPresentationStyle = .fullScreen
+    controller.modalTransitionStyle = .crossDissolve
     _ = controller.view
-      return controller
-    }
+    return controller
+  }
 
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -280,7 +283,7 @@ public class CLIPlayerController: UIViewController {
     delayHidingControls()
     player.muted = !player.muted
     let imageName = player.muted ? "plyr-muted" : "plyr-volume"
-    volumeButton.setImage(UIImage(named: imageName, in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
+    volumeButton.setImage(UIImage(named: imageName, in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
   }
 
   @IBAction func qualityButtonTapped(_ sender: Any) {
@@ -313,7 +316,7 @@ public class CLIPlayerController: UIViewController {
     delayHidingControls()
     player.playerView.playerFillMode = player.playerView.playerFillMode == .resizeAspect ? .resizeAspectFill : .resizeAspect
     let imageName = player.playerView.playerFillMode == .resizeAspect ? "plyr-enter-fullscreen" : "plyr-exit-fullscreen"
-    fillModeButton.setImage(UIImage(named: imageName, in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
+    fillModeButton.setImage(UIImage(named: imageName, in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
   }
 
   @IBAction func speedButtonTapped(_ sender: Any) {
@@ -349,6 +352,10 @@ public class CLIPlayerController: UIViewController {
     delayHidingControls()
     airPlayButton.showAirPlayModal()
   }
+  @IBAction func googleCastButtonTapped(_ sender: Any) {
+    delayHidingControls()
+  }
+
 }
 
 extension CLIPlayerController {
@@ -420,9 +427,9 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   public func playerPlaybackStateDidChange(_ player: Player) {
     print("playerPlaybackStateDidChange: ", player.playbackState)
     if player.playbackState == .playing {
-      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
+      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
     } else {
-      playButton.setImage(UIImage(named: "plyr-play", in: Bundle(for: Self.self), compatibleWith: nil), for: .normal)
+      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
     }
   }
 

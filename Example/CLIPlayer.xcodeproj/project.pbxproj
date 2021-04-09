@@ -24,6 +24,7 @@
 		02CACEA2261CBA1D004C8B55 /* Oxygen-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oxygen-Bold.ttf"; sourceTree = "<group>"; };
 		02CACEA3261CBA1D004C8B55 /* Oxygen-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oxygen-Italic.ttf"; sourceTree = "<group>"; };
 		02CACEAF261CC2D1004C8B55 /* WorkSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WorkSans-Bold.ttf"; sourceTree = "<group>"; };
+		04436B732620446700EE665B /* CLIPlayer_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CLIPlayer_Example.entitlements; sourceTree = "<group>"; };
 		4A7177A7E6542BB86DDFE6B2 /* Pods_CLIPlayer_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CLIPlayer_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52556791B8D3E420FF1FEDFA /* CLIPlayer.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CLIPlayer.podspec; path = ../CLIPlayer.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		580DE374E7F64E9E19A74690 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -64,6 +65,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				04436B732620446700EE665B /* CLIPlayer_Example.entitlements */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for CLIPlayer */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -137,6 +139,7 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				A2EC93C08F42DE7047FD9A04 /* [CP] Embed Pods Frameworks */,
+				E0D0F9C80A058531B2B6D847 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -230,19 +233,43 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CLIPlayer_Example/Pods-CLIPlayer_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CLIPlayer/CLIPlayer.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Player/Player.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/YTVimeoExtractor/YTVimeoExtractor.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CLIPlayer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Player.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YTVimeoExtractor.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CLIPlayer_Example/Pods-CLIPlayer_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0D0F9C80A058531B2B6D847 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CLIPlayer_Example/Pods-CLIPlayer_Example-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/CLIPlayer/CLIPlayer.bundle",
+				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.5.3_static/GoogleCast.framework/GoogleCastCoreResources.bundle",
+				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.5.3_static/GoogleCast.framework/GoogleCastUIResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CLIPlayer.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastCoreResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastUIResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CLIPlayer_Example/Pods-CLIPlayer_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -387,6 +414,7 @@
 			baseConfigurationReference = 5CB33A9CF8D3421C0C5B73D6 /* Pods-CLIPlayer_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CLIPlayer_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = FQ3YMMKHG5;
 				INFOPLIST_FILE = CLIPlayer/Info.plist;
@@ -404,6 +432,7 @@
 			baseConfigurationReference = A067164E8DCFD148F0AFF702 /* Pods-CLIPlayer_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CLIPlayer_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = FQ3YMMKHG5;
 				INFOPLIST_FILE = CLIPlayer/Info.plist;

@@ -209,10 +209,12 @@
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="LaN-za-4zF" secondAttribute="height" multiplier="1:1" id="pPO-tZ-aJX"/>
                                                                 </constraints>
-                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color key="tintColor" systemColor="systemBlueColor"/>
                                                                 <state key="normal" image="plyr-rewind">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
+                                                                <state key="selected" image="plyr-rewind-blue"/>
+                                                                <state key="highlighted" image="plyr-rewind-blue"/>
                                                                 <connections>
                                                                     <action selector="rewindButtonTapped:" destination="lZL-MP-MeT" eventType="touchUpInside" id="fsq-8i-oBC"/>
                                                                 </connections>
@@ -235,10 +237,12 @@
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="mLQ-ZV-MW8" secondAttribute="height" multiplier="1:1" id="2ki-cS-KFn"/>
                                                                 </constraints>
-                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color key="tintColor" systemColor="systemBlueColor"/>
                                                                 <state key="normal" image="plyr-fast-forward">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
+                                                                <state key="selected" image="plyr-fast-forward-blue"/>
+                                                                <state key="highlighted" image="plyr-fast-forward-blue"/>
                                                                 <connections>
                                                                     <action selector="forwardButtonTapped:" destination="lZL-MP-MeT" eventType="touchUpInside" id="Rzx-IS-NcK"/>
                                                                 </connections>
@@ -386,9 +390,21 @@ Contemporary | Intermediate </string>
                                                         </subviews>
                                                     </stackView>
                                                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="lwW-xi-lFf">
-                                                        <rect key="frame" x="166.5" y="5" width="517.5" height="50"/>
+                                                        <rect key="frame" x="166.5" y="5" width="473.5" height="50"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaL-Yg-yJQ" customClass="CLIGoogleCastButton" customModule="CLIPlayer" customModuleProvider="target">
+                                                        <rect key="frame" x="644" y="10" width="40" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="gaL-Yg-yJQ" secondAttribute="height" multiplier="1:1" id="GYo-7c-fhl"/>
+                                                            <constraint firstAttribute="width" constant="40" id="ogh-Bt-Cba"/>
+                                                        </constraints>
+                                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="chromecast_white"/>
+                                                        <connections>
+                                                            <action selector="googleCastButtonTapped:" destination="lZL-MP-MeT" eventType="touchUpInside" id="mOO-wn-Myn"/>
+                                                        </connections>
+                                                    </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mia-cI-1mX" customClass="CLIAirPlayButton" customModule="CLIPlayer" customModuleProvider="target">
                                                         <rect key="frame" x="688" y="10" width="40" height="40"/>
                                                         <constraints>
@@ -492,6 +508,7 @@ Contemporary | Intermediate </string>
                         <outlet property="forwardInfoContainerView" destination="NCu-eS-LCI" id="sKy-Ha-0ZL"/>
                         <outlet property="forwardOverlayContainerView" destination="hoW-uO-ylj" id="mzI-CT-iXx"/>
                         <outlet property="forwardOverlayLabel" destination="NFs-Sl-Q5K" id="d12-mb-w39"/>
+                        <outlet property="googleCastButton" destination="gaL-Yg-yJQ" id="XhZ-tE-OB5"/>
                         <outlet property="mirrorButton" destination="Laf-nC-cfn" id="wiM-Gz-heW"/>
                         <outlet property="playButton" destination="0Nn-gZ-GyP" id="BDf-up-Fp2"/>
                         <outlet property="playerContainerView" destination="jRP-io-QEa" id="q9K-w5-zop"/>
@@ -681,15 +698,21 @@ Contemporary | Intermediate </string>
     <resources>
         <image name="airplay_blue" width="750" height="750"/>
         <image name="airplay_white" width="750" height="750"/>
+        <image name="chromecast_white" width="18" height="18"/>
         <image name="end-class" width="95" height="25"/>
         <image name="plyr-enter-fullscreen" width="27" height="21"/>
         <image name="plyr-fast-forward" width="18" height="19"/>
+        <image name="plyr-fast-forward-blue" width="18" height="19"/>
         <image name="plyr-flip" width="18" height="16"/>
         <image name="plyr-play" width="12" height="16"/>
         <image name="plyr-rewind" width="18" height="20"/>
+        <image name="plyr-rewind-blue" width="18" height="20"/>
         <image name="plyr-settings" width="17" height="17"/>
         <image name="plyr-speed-1.0x" width="18" height="17"/>
         <image name="plyr-volume" width="19" height="16"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

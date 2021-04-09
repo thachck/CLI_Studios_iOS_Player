@@ -1,8 +1,18 @@
 PODS:
   - CLIPlayer (0.1.0):
+    - google-cast-sdk (~> 4.5.3)
     - Player (~> 0.14.0)
     - YTVimeoExtractor (~> 1.2.0)
+  - google-cast-sdk (4.5.3):
+    - google-cast-sdk/Core (= 4.5.3)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - google-cast-sdk/Core (4.5.3):
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.13)
+  - GTMSessionFetcher/Core (1.5.0)
   - Player (0.14.0)
+  - Protobuf (3.15.8)
   - YTVimeoExtractor (1.2.0)
 
 DEPENDENCIES:
@@ -11,6 +21,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - google-cast-sdk
+    - GTMSessionFetcher
+    - Protobuf
     - YTVimeoExtractor
 
 EXTERNAL SOURCES:
@@ -26,8 +39,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/buubui/Player
 
 SPEC CHECKSUMS:
-  CLIPlayer: f44138c63302f3d913d29e6a8190d9a066ae4b66
+  CLIPlayer: b493838a6393f9eaaf226af53ffdbcab77dfa9f2
+  google-cast-sdk: f94c5df87564f71d4342400b8487665e9bed27c6
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   Player: 4f8c299a4ab807c3ca52a098995db8c584ff8781
+  Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
   YTVimeoExtractor: f4ed90f43e08d33d56c1d1aff3f4f64663747966
 
 PODFILE CHECKSUM: ec32ede2190d49a11134ec31061ffa0b630a30f8

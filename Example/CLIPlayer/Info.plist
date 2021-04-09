@@ -26,6 +26,21 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>CLI Player would like to access bluetooth to use chrome cast.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>CLI Player would like to access bluetooth to use chrome cast.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_googlecast._tcp</string>
+		<string>_27C3512B._googlecast._tcp</string>
+		<string>_5EC79E8A._googlecast._tcp</string>
+		<string>_663A9C93._googlecast._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>CLI Player would like to access bluetooth to use chrome cast.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>${PRODUCT_NAME} uses the microphone to discover nearby devices.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Oxygen-Bold.ttf</string>

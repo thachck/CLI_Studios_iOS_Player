@@ -26,19 +26,16 @@ TODO: Video Player for CLI Studios.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'buubui' => 'buu.bui@eastagile.com' }
   s.source           = { :git => 'https://github.com/buubui/CLIPlayer.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'
-
   s.source_files = 'CLIPlayer/Classes/**/*'
-  s.resources = ['CLIPlayer/Assets/Assets.xcassets']
-  # s.resource_bundles = {
-  #   'CLIPlayer' => ['CLIPlayer/Assets/*.png']
-  # }
+  s.resource_bundles = { 'CLIPlayer' => ['CLIPlayer/Assets/*'] }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
+  s.static_framework = true
   s.dependency 'Player', '~> 0.14.0'
   s.dependency 'YTVimeoExtractor', '~> 1.2.0'
+  s.dependency 'google-cast-sdk', '~> 4.5.3'
 end
