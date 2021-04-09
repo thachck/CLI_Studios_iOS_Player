@@ -68,6 +68,8 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var rewindOverlayLabel: UILabel!
   @IBOutlet weak var topControlsStackView: UIStackView!
   @IBOutlet weak var airPlayMaskView: UIView!
+  @IBOutlet weak var airPlayDeviceLabel: UILabel!
+  @IBOutlet weak var airPlayTitleLabel: UILabel!
   
   //MARK: Properties
   public override var prefersStatusBarHidden: Bool { true }
@@ -201,6 +203,8 @@ public class CLIPlayerController: UIViewController {
     currentTimeLabel.font = config.currentTimeFont
     rewindOverlayLabel.font = config.seekOverlayFont
     forwardOverlayLabel.font = config.seekOverlayFont
+    airPlayTitleLabel.font = config.airPlayTitleFont
+    airPlayDeviceLabel.font = config.airPlayDeviceFont
   }
 
   private var isLandscape: Bool {
@@ -388,6 +392,14 @@ extension CLIPlayerController {
     }
     mirrorButton.isHidden = airPlayButton.isWirelessRouteActive
     airPlayMaskView.isHidden = !airPlayButton.isWirelessRouteActive
+    airPlayDeviceLabel.text = " "
+    let currentRoute = AVAudioSession.sharedInstance().currentRoute
+    for output in currentRoute.outputs {
+      if output.portType == AVAudioSession.Port.airPlay {
+        airPlayDeviceLabel.text = "This video is playing on \"\(output.portName)\""
+        break
+      }
+    }
   }
 }
 
