@@ -494,15 +494,16 @@ Contemporary | Intermediate </string>
                     </view>
                     <connections>
                         <outlet property="airPlayButton" destination="mia-cI-1mX" id="HZi-1X-rMe"/>
-                        <outlet property="airPlayDeviceLabel" destination="SUF-qz-Zav" id="HaI-T0-vnH"/>
-                        <outlet property="airPlayMaskView" destination="pxh-qV-0xa" id="Wld-kl-h41"/>
-                        <outlet property="airPlayTitleLabel" destination="95X-gZ-ibx" id="mYW-3G-tjh"/>
                         <outlet property="bottomControlsView" destination="oHF-jl-mnz" id="yil-ST-HsA"/>
                         <outlet property="closeButton" destination="Svs-Rj-Cdk" id="OG7-6C-XBz"/>
                         <outlet property="controlsContainerView" destination="TlU-Rw-4zJ" id="r3m-mr-Q49"/>
                         <outlet property="currentTimeLabel" destination="rPc-D0-ivg" id="Q2c-Ij-10X"/>
                         <outlet property="descriptionLabel" destination="tdf-pa-j8L" id="0Pi-Ki-3Mj"/>
                         <outlet property="endClassButton" destination="yL5-pL-uAd" id="Ab9-Uy-UUg"/>
+                        <outlet property="externalPlayerDeviceLabel" destination="SUF-qz-Zav" id="HaI-T0-vnH"/>
+                        <outlet property="externalPlayerImageView" destination="gU3-lR-plj" id="Jdx-4n-bMf"/>
+                        <outlet property="externalPlayerMaskView" destination="pxh-qV-0xa" id="Wld-kl-h41"/>
+                        <outlet property="externalPlayerTitleLabel" destination="95X-gZ-ibx" id="mYW-3G-tjh"/>
                         <outlet property="fillModeButton" destination="kUy-QP-kW2" id="LvC-LF-08q"/>
                         <outlet property="forwardArrowsContainer" destination="IGF-J6-IE2" id="TeQ-p0-oo8"/>
                         <outlet property="forwardInfoContainerView" destination="NCu-eS-LCI" id="sKy-Ha-0ZL"/>

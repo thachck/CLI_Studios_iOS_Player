@@ -11,6 +11,13 @@ import MediaPlayer
 class CLIAirPlayButton: CLIControlButton {
   private var _volumeView: MPVolumeView!
   var isWirelessRouteActive: Bool { _volumeView.isWirelessRouteActive }
+  var forceHidden: Bool? {
+    didSet {
+      if let forceHidden = forceHidden {
+        isHidden = forceHidden
+      }
+    }
+  }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -27,12 +34,19 @@ class CLIAirPlayButton: CLIControlButton {
   func showAirPlayModal() {
     _volumeView.airplayButton?.sendActions(for: .touchUpInside)
   }
+
+  func showIfAvailable() {
+    if forceHidden == nil {
+      isHidden = alpha == 0
+    }
+  }
   
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
     if let button = object as? UIButton {
       switch keyPath {
         case "alpha":
-          self.isHidden = button.alpha == 0
+          alpha = button.alpha
+          showIfAvailable()
         case "selected":
           isSelected = button.isSelected
         default:

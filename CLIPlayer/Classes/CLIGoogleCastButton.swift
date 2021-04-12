@@ -19,5 +19,43 @@ class CLIGoogleCastButton: GCKUICastButton {
     contentHorizontalAlignment = .fill;
     contentVerticalAlignment = .fill;
     imageView?.contentMode = .scaleAspectFit
+    applyCastStyle()
+  }
+
+  func applyCastStyle() {
+    let castStyle = GCKUIStyle.sharedInstance()
+
+    castStyle.castViews.backgroundColor = .black
+    castStyle.castViews.headingTextColor = .white
+    castStyle.castViews.bodyTextColor = .white
+    castStyle.castViews.iconTintColor = .white
+    castStyle.castViews.captionTextColor = .white
+    castStyle.castViews.sliderProgressColor = .main
+
+    castStyle.castViews.deviceControl.connectionController.backgroundColor = .black
+    castStyle.castViews.deviceControl.connectionController.navigation.headingTextColor = .white
+    castStyle.castViews.deviceControl.connectionController.navigation.bodyTextColor = .white
+    castStyle.castViews.deviceControl.connectionController.navigation.captionTextColor = .white
+    castStyle.castViews.deviceControl.connectionController.navigation.iconTintColor = .white
+    castStyle.castViews.deviceControl.connectionController.sliderProgressColor = .main
+    castStyle.castViews.deviceControl.connectionController.sliderSecondaryProgressColor = .main
+
+    castStyle.castViews.deviceControl.backgroundColor = .blue
+    castStyle.castViews.deviceControl.bodyTextColor = .white
+    castStyle.castViews.deviceControl.headingTextColor = .white
+    castStyle.castViews.deviceControl.captionTextColor = .white
+    castStyle.castViews.deviceControl.iconTintColor = .white
+    castStyle.castViews.deviceControl.buttonTextColor = .white
+    castStyle.castViews.deviceControl.buttonTextColor = .white
+
+    castStyle.castViews.deviceControl.deviceChooser.backgroundColor = .black
+    castStyle.castViews.deviceControl.deviceChooser.iconTintColor = .white
+    castStyle.castViews.deviceControl.deviceChooser.headingTextColor = .white
+    castStyle.castViews.deviceControl.deviceChooser.captionTextColor = .white
+    castStyle.castViews.deviceControl.deviceChooser.bodyTextColor = .white
+    castStyle.castViews.deviceControl.deviceChooser.buttonTextColor = .white
+
+    // Refresh all currently visible views with the assigned styles.
+    castStyle.apply()
   }
 }

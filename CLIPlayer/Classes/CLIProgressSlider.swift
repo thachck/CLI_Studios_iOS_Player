@@ -18,7 +18,6 @@ class CLIProgressSlider: UISlider {
 
   override func draw(_ rect: CGRect) {
     super.draw(rect)
-
     setThumbImage(UIImage.makeCircleImage(size: CGSize(width: normalThumbWidth, height: normalThumbWidth), backgroundColor: thumbColor), for: .normal)
     setThumbImage(UIImage.makeCircleImage(size: CGSize(width: highlightedThumbWidth, height: highlightedThumbWidth), backgroundColor: thumbColor), for: .highlighted)
     tintColor = thumbColor
@@ -28,6 +27,9 @@ class CLIProgressSlider: UISlider {
   override func layoutSublayers(of layer: CALayer) {
     super.layoutSublayers(of: layer)
 
+    for subview in subviews {
+      subview.alpha = 1
+    }
     var rect = trackRect(forBounds: self.bounds)
     rect.size.width = max(rect.size.width * CGFloat(value), 1)
     reloadGradientLayer(frame: rect, colors: [minTrackStartColor.cgColor, minTrackEndColor.cgColor])
@@ -51,5 +53,15 @@ class CLIProgressSlider: UISlider {
       gradientLayer.cornerRadius = frame.height / 2
     }
     CATransaction.commit()
+  }
+
+  override var alpha: CGFloat {
+    get {
+      super.alpha
+    }
+    set {
+      print("😎set alpha", newValue)
+      super.alpha = newValue
+    }
   }
 }

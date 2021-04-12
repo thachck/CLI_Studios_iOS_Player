@@ -70,10 +70,11 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var forwardOverlayLabel: UILabel!
   @IBOutlet weak var rewindOverlayLabel: UILabel!
   @IBOutlet weak var topControlsStackView: UIStackView!
-  @IBOutlet weak var airPlayMaskView: UIView!
-  @IBOutlet weak var airPlayDeviceLabel: UILabel!
-  @IBOutlet weak var airPlayTitleLabel: UILabel!
-  
+  @IBOutlet weak var externalPlayerMaskView: UIView!
+  @IBOutlet weak var externalPlayerDeviceLabel: UILabel!
+  @IBOutlet weak var externalPlayerTitleLabel: UILabel!
+  @IBOutlet weak var externalPlayerImageView: UIImageView!
+
   //MARK: Properties
   public override var prefersStatusBarHidden: Bool { true }
   public var config: CLIPlayerConfig! {
@@ -130,7 +131,7 @@ public class CLIPlayerController: UIViewController {
 
   public var currentSpeed: Float = 1.0 {
     didSet {
-      player.rate = currentSpeed
+      rate = currentSpeed
       speedButton.setImage(UIImage(named: String(format: "plyr-speed-%.1fx", currentSpeed), in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
     }
   }
@@ -145,6 +146,7 @@ public class CLIPlayerController: UIViewController {
   private let hlsParser = HLSParser()
   private var hidingControlTimer: Timer?
   private var sliderIsDragging = false
+  private var googleCastController: GCKUIMediaController?
   //MARK: Setups
 
   public class func instance() -> CLIPlayerController {
@@ -162,8 +164,14 @@ public class CLIPlayerController: UIViewController {
     if config == nil {
       config = CLIPlayerConfig()
     }
-    
+
+    setUpGoogleCast()
+
     NotificationCenter.default.addObserver(self, selector: #selector(self.screenConnectionChanged(_:)), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
+  }
+
+  func setUpGoogleCast() {
+    GCKCastContext.sharedInstance().sessionManager.add(self)
   }
   
   deinit {
@@ -206,8 +214,8 @@ public class CLIPlayerController: UIViewController {
     currentTimeLabel.font = config.currentTimeFont
     rewindOverlayLabel.font = config.seekOverlayFont
     forwardOverlayLabel.font = config.seekOverlayFont
-    airPlayTitleLabel.font = config.airPlayTitleFont
-    airPlayDeviceLabel.font = config.airPlayDeviceFont
+    externalPlayerTitleLabel.font = config.airPlayTitleFont
+    externalPlayerDeviceLabel.font = config.airPlayDeviceFont
   }
 
   private var isLandscape: Bool {
@@ -233,7 +241,7 @@ public class CLIPlayerController: UIViewController {
       hidingControlTimer.invalidate()
     }
     hidingControlTimer = Timer.scheduledTimer(withTimeInterval: hideControlsTimeInterval, repeats: false) { [weak self] (timer) in
-      if self?.player.playbackState == .playing {
+      if self?.isPlaying == true {
         self?.hideControls(true)
       } else {
         self?.delayHidingControls()
@@ -246,13 +254,21 @@ public class CLIPlayerController: UIViewController {
     modalController.config = config.selectorModalConfig
   }
 
+  private func refreshPlayButtonImage() {
+    if isPlaying {
+      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    } else {
+      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    }
+  }
+
   //MARK: Actions
   @IBAction func playButtonTapped(_ sender: Any) {
     delayHidingControls()
-    if player.playbackState == .playing {
-      player.pause()
+    if isPlaying {
+      pause()
     } else {
-      player.playFromCurrentTime()
+      playFromCurrentTime()
     }
   }
 
@@ -264,14 +280,12 @@ public class CLIPlayerController: UIViewController {
 
   @IBAction func rewindButtonTapped(_ sender: Any) {
     delayHidingControls()
-    let newTime = max(player.currentTimeInterval - 15, 0)
-    player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+    seek(to: -15, relative: true)
   }
 
   @IBAction func forwardButtonTapped(_ sender: Any) {
     delayHidingControls()
-    let newTime = min(player.currentTimeInterval + 15, player.maximumDuration - 1)
-    player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+    seek(to: 15, relative: true)
   }
 
   @IBAction func mirrorButtonTapped(_ sender: Any) {
@@ -281,8 +295,9 @@ public class CLIPlayerController: UIViewController {
 
   @IBAction func volumeButtonTapped(_ sender: Any) {
     delayHidingControls()
-    player.muted = !player.muted
-    let imageName = player.muted ? "plyr-muted" : "plyr-volume"
+    let newMuted = !muted
+    muted = newMuted
+    let imageName = newMuted ? "plyr-muted" : "plyr-volume"
     volumeButton.setImage(UIImage(named: imageName, in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
   }
 
@@ -305,8 +320,11 @@ public class CLIPlayerController: UIViewController {
     print("progressSliderValueChanged: ", progressSlider.value)
     guard let touch = event.allTouches?.first, touch.phase != .ended, player.maximumDuration != .nan else {
       sliderIsDragging = false
-      let newTime = Double(progressSlider.value) * player.maximumDuration
-      player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+      if !googleCasting {
+        let newTime = Double(progressSlider.value) * player.maximumDuration
+        seekInternalPlayer(to: newTime, relative: false)
+      }
+
       return
     }
     sliderIsDragging = true
@@ -335,6 +353,7 @@ public class CLIPlayerController: UIViewController {
   }
 
   @IBAction func closeButtonTapped(_ sender: Any) {
+    stop()
     dismiss(animated: true, completion: nil)
   }
   
@@ -395,17 +414,10 @@ extension CLIPlayerController {
   
   @objc func screenConnectionChanged(_ notification: Notification) {
     if airPlayButton.isWirelessRouteActive {
-      player.playFromCurrentTime()
-    }
-    mirrorButton.isHidden = airPlayButton.isWirelessRouteActive
-    airPlayMaskView.isHidden = !airPlayButton.isWirelessRouteActive
-    airPlayDeviceLabel.text = " "
-    let currentRoute = AVAudioSession.sharedInstance().currentRoute
-    for output in currentRoute.outputs {
-      if output.portType == AVAudioSession.Port.airPlay {
-        airPlayDeviceLabel.text = "This video is playing on \"\(output.portName)\""
-        break
-      }
+      playFromCurrentTime()
+      refreshPlayerForAirplay()
+    } else {
+      refreshInternalPlayer()
     }
   }
 }
@@ -420,17 +432,16 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
     hideControls(false)
     delayHidingControls()
     if airPlayButton.isWirelessRouteActive {
-      player.playFromCurrentTime()
+      playFromCurrentTime()
     }
   }
 
   public func playerPlaybackStateDidChange(_ player: Player) {
     print("playerPlaybackStateDidChange: ", player.playbackState)
-    if player.playbackState == .playing {
-      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
-    } else {
-      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    if googleCasting {
+      return
     }
+    refreshPlayButtonImage()
   }
 
   public func playerBufferingStateDidChange(_ player: Player) {
@@ -445,7 +456,7 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   }
 
   public func playerCurrentTimeDidChange(_ player: Player) {
-    if player.currentTimeInterval.isNaN || player.maximumDuration.isNaN {
+    if googleCasting || player.currentTimeInterval.isNaN || player.maximumDuration.isNaN {
       return
     }
 
@@ -525,6 +536,201 @@ extension CLIPlayerController {
       container.backgroundColor = .clear
     } completion: { (completed) in
       infoView.isHidden = true
+    }
+  }
+
+  func refreshPlayerForGoogleCast() {
+    externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    externalPlayerDeviceLabel.text = " "
+    externalPlayerTitleLabel.text = "Chrome Cast"
+    externalPlayerMaskView.isHidden = false
+    mirrorButton.isHidden = true
+    qualityButton.isHidden = true
+    fillModeButton.isHidden = true
+    airPlayButton.forceHidden = true
+  }
+
+  func refreshPlayerForAirplay() {
+    externalPlayerDeviceLabel.text = " "
+    externalPlayerTitleLabel.text = "AirPlay"
+    externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    let currentRoute = AVAudioSession.sharedInstance().currentRoute
+    for output in currentRoute.outputs {
+      if output.portType == AVAudioSession.Port.airPlay {
+        externalPlayerDeviceLabel.text = "This video is playing on \"\(output.portName)\""
+        break
+      }
+    }
+    externalPlayerMaskView.isHidden = false
+    mirrorButton.isHidden = true
+    fillModeButton.isHidden = true
+    googleCastButton.isHidden = true
+    rate = currentSpeed
+  }
+
+  func refreshInternalPlayer() {
+    externalPlayerMaskView.isHidden = true
+    mirrorButton.isHidden = false
+    googleCastButton.isHidden = false
+    fillModeButton.isHidden = false
+    airPlayButton.forceHidden = nil
+    airPlayButton.showIfAvailable()
+    reloadQualitySetting()
+    rate = currentSpeed
+  }
+}
+
+extension CLIPlayerController: GCKSessionManagerListener {
+  public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
+    print("didStart session: GCKCastSession", session)
+    session.remoteMediaClient?.add(self)
+    player.pause()
+    googleCastController = GCKUIMediaController()
+    googleCastController?.delegate = self
+    googleCastController?.streamPositionSlider = progressSlider
+    googleCastController?.streamPositionLabel = currentTimeLabel
+    if let url = player.url {
+      let mediaInfo = GCKMediaInformationBuilder(contentURL: url).build()
+        CLIGoogleCastHelper.shared.loadMedia(mediaInfo: mediaInfo, byAppending: false)
+    }
+    refreshPlayerForGoogleCast()
+    if let friendlyName = session.device.friendlyName {
+      externalPlayerDeviceLabel.text = "This video is playing on \"\(friendlyName)\""
+    }
+
+  }
+
+  public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
+    let currentTime = googleCastController?.lastKnownStreamPosition
+    googleCastController?.streamPositionSlider = nil
+    googleCastController?.streamPositionLabel = nil
+    googleCastController?.delegate = nil
+    googleCastController = nil
+    if let currentTime = currentTime {
+      seek(to: currentTime, relative: false)
+    }
+  }
+
+  public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
+    refreshInternalPlayer()
+    playFromCurrentTime()
+    session.remoteMediaClient?.remove(self)
+  }
+}
+
+extension CLIPlayerController: GCKRemoteMediaClientListener {
+  public func remoteMediaClient(_ client: GCKRemoteMediaClient, didStartMediaSessionWithID sessionID: Int) {
+    rate = currentSpeed
+    seek(to: player.currentTimeInterval, relative: false)
+  }
+}
+
+extension CLIPlayerController: GCKUIMediaControllerDelegate {
+  public func mediaController(_ mediaController: GCKUIMediaController, didUpdate playerState: GCKMediaPlayerState, lastStreamPosition streamPosition: TimeInterval) {
+    refreshPlayButtonImage()
+  }
+}
+
+extension CLIPlayerController {
+  public var googleCasting: Bool {
+    googleCastController?.mediaLoaded == true
+  }
+
+  public var isPlaying: Bool {
+    if googleCasting {
+      return CLIGoogleCastHelper.shared.isPlaying
+    }
+
+    return player.playbackState == .playing
+  }
+
+  var muted: Bool {
+    get {
+      if googleCasting, let isMuted = CLIGoogleCastHelper.shared.mediaStatus?.isMuted {
+        return isMuted
+      }
+      return player.muted
+    }
+    set {
+      if googleCasting, let remoteMediaClient = CLIGoogleCastHelper.shared.remoteMediaClient {
+        remoteMediaClient.setStreamMuted(newValue)
+      } else {
+        player.muted = newValue
+      }
+    }
+  }
+
+  var currentTimeInterval: TimeInterval {
+    get {
+      if googleCasting, let mediaStatus = CLIGoogleCastHelper.shared.mediaStatus {
+        return mediaStatus.streamPosition
+      }
+      return player.currentTimeInterval
+    }
+    set {
+      seek(to: newValue, relative: false)
+    }
+  }
+
+  var rate: Float {
+    get {
+      if googleCasting, let mediaStatus = CLIGoogleCastHelper.shared.mediaStatus {
+        return mediaStatus.playbackRate
+      }
+      return player.rate
+    }
+    set {
+      if googleCasting, let client = CLIGoogleCastHelper.shared.remoteMediaClient {
+        client.setPlaybackRate(newValue)
+      } else {
+        player.rate = newValue
+      }
+    }
+  }
+
+  func pause() {
+    if googleCasting {
+      CLIGoogleCastHelper.shared.remoteMediaClient?.pause()
+    } else {
+      player.pause()
+    }
+  }
+
+  func playFromCurrentTime() {
+    if googleCasting {
+      CLIGoogleCastHelper.shared.remoteMediaClient?.play()
+    } else {
+      player.playFromCurrentTime()
+    }
+  }
+
+  func seekInternalPlayer(to toTime: TimeInterval, relative: Bool) {
+    var newTime = relative ? player.currentTimeInterval + toTime : toTime
+    newTime = min(newTime, player.maximumDuration - 1)
+    newTime = max(newTime, 0)
+    player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+  }
+
+  func seekGoogleCastPlayer(to toTime: TimeInterval, relative: Bool) {
+    let option = GCKMediaSeekOptions()
+    option.interval = toTime
+    option.relative = relative
+    CLIGoogleCastHelper.shared.remoteMediaClient?.seek(with: option)
+  }
+
+  func seek(to toTime: TimeInterval, relative: Bool) {
+    if googleCasting {
+      seekGoogleCastPlayer(to: toTime, relative: relative)
+    } else {
+      seekInternalPlayer(to: toTime, relative: relative)
+    }
+  }
+
+  func stop() {
+    if googleCasting {
+      GCKCastContext.sharedInstance().sessionManager.endSessionAndStopCasting(true)
+    } else {
+      player.stop()
     }
   }
 }
