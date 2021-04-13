@@ -25,8 +25,7 @@ class SelectorModalViewController: UIViewController {
   }
   
   public class func instance() -> SelectorModalViewController {
-    let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle.cliPlayerBundle)
-    let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! SelectorModalViewController
+    let controller = UIStoryboard.cliPlayerStoryboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! SelectorModalViewController
     controller.modalPresentationStyle = .overCurrentContext
     controller.modalTransitionStyle = .crossDissolve
     return controller

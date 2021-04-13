@@ -54,14 +54,4 @@ class CLIProgressSlider: UISlider {
     }
     CATransaction.commit()
   }
-
-  override var alpha: CGFloat {
-    get {
-      super.alpha
-    }
-    set {
-      print("😎set alpha", newValue)
-      super.alpha = newValue
-    }
-  }
 }

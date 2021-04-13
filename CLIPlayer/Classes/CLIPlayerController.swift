@@ -107,6 +107,7 @@ public class CLIPlayerController: UIViewController {
       }
     }
   }
+  public var googleCastMetadata: GCKMediaMetadata?
 
   public private(set) var videoType: CLIVideoType = .hls
   var videoQualities: [CLIVideoQuality] = [] {
@@ -150,8 +151,7 @@ public class CLIPlayerController: UIViewController {
   //MARK: Setups
 
   public class func instance() -> CLIPlayerController {
-    let storyboard = UIStoryboard(name: "CLIPlayer", bundle: Bundle.cliPlayerBundle)
-    let controller = storyboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! CLIPlayerController
+    let controller = UIStoryboard.cliPlayerStoryboard.instantiateViewController(withIdentifier: String(describing: Self.self)) as! CLIPlayerController
     controller.modalPresentationStyle = .fullScreen
     controller.modalTransitionStyle = .crossDissolve
     _ = controller.view
@@ -166,16 +166,33 @@ public class CLIPlayerController: UIViewController {
     }
 
     setUpGoogleCast()
-
-    NotificationCenter.default.addObserver(self, selector: #selector(self.screenConnectionChanged(_:)), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
+    setUpNotificationListeners()
   }
 
-  func setUpGoogleCast() {
+  private func setUpGoogleCast() {
     GCKCastContext.sharedInstance().sessionManager.add(self)
+  }
+
+  private func setUpNotificationListeners() {
+//    AirPlay notification
+    NotificationCenter.default.addObserver(self, selector: #selector(self.screenConnectionChanged(_:)), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
   }
   
   deinit {
     NotificationCenter.default.removeObserver(self, name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
+  }
+
+  public override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+//    Please check this workaround after update Google Cast version
+    if let navController = viewControllerToPresent as? UINavigationController, let rootController = navController.viewControllers.first, String(describing: type(of: rootController)) == "GCKUIDeviceConnectionViewController" {
+      let modalController = ModalWrapperViewController.instance()
+      modalController.addViewController(navController)
+      navController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+      super.present(modalController, animated: flag, completion: completion)
+    } else {
+      super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+
   }
   
   @objc func volumeViewTapped(_ sender: Any?) {
@@ -194,7 +211,7 @@ public class CLIPlayerController: UIViewController {
     setUpUI()
   }
 
-  func initPlayer() {
+  private func initPlayer() {
     player = Player()
     player.playerDelegate = self
     player.playbackDelegate = self
@@ -207,7 +224,7 @@ public class CLIPlayerController: UIViewController {
     hideControls(true)
   }
 
-  func applyConfig() {
+  private func applyConfig() {
     titleLabel.font = config.classTitleFont
     descriptionLabel.font = config.classDescriptionFont
     endClassButton.titleLabel?.font = config.endClassButtonFont
@@ -220,46 +237,6 @@ public class CLIPlayerController: UIViewController {
 
   private var isLandscape: Bool {
     forceLandscape ? true : UIDevice.current.orientation.isLandscape
-  }
-
-  private func setUpUI() {
-    setUpCloseButton()
-  }
-
-  private func setUpCloseButton() {
-    closeButton.isHidden =  isLandscape
-    endClassButton.isHidden = !closeButton.isHidden
-  }
-
-  private func hideControls(_ isHidden: Bool) {
-    topControlsView.isHidden = isHidden
-    bottomControlsView.isHidden = isHidden
-  }
-
-  private func delayHidingControls() {
-    if let hidingControlTimer = hidingControlTimer {
-      hidingControlTimer.invalidate()
-    }
-    hidingControlTimer = Timer.scheduledTimer(withTimeInterval: hideControlsTimeInterval, repeats: false) { [weak self] (timer) in
-      if self?.isPlaying == true {
-        self?.hideControls(true)
-      } else {
-        self?.delayHidingControls()
-      }
-    }
-  }
-  
-  private func showSelectorModalController(_ modalController: SelectorModalViewController) {
-    present(modalController, animated: true, completion: nil)
-    modalController.config = config.selectorModalConfig
-  }
-
-  private func refreshPlayButtonImage() {
-    if isPlaying {
-      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
-    } else {
-      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
-    }
   }
 
   //MARK: Actions
@@ -318,9 +295,9 @@ public class CLIPlayerController: UIViewController {
   @IBAction func progressSliderValueChanged(_ sender: UISlider, forEvent event: UIEvent) {
     delayHidingControls()
     print("progressSliderValueChanged: ", progressSlider.value)
-    guard let touch = event.allTouches?.first, touch.phase != .ended, player.maximumDuration != .nan else {
+    guard let touch = event.allTouches?.first, touch.phase != .ended else {
       sliderIsDragging = false
-      if !googleCasting {
+      if !googleCasting && !player.maximumDuration.isNaN {
         let newTime = Double(progressSlider.value) * player.maximumDuration
         seekInternalPlayer(to: newTime, relative: false)
       }
@@ -374,10 +351,50 @@ public class CLIPlayerController: UIViewController {
   @IBAction func googleCastButtonTapped(_ sender: Any) {
     delayHidingControls()
   }
-
 }
 
+//MARK: Private methods
 extension CLIPlayerController {
+  private func setUpUI() {
+    setUpCloseButton()
+  }
+
+  private func setUpCloseButton() {
+    closeButton.isHidden =  isLandscape
+    endClassButton.isHidden = !closeButton.isHidden
+  }
+
+  private func hideControls(_ isHidden: Bool) {
+    topControlsView.isHidden = isHidden
+    bottomControlsView.isHidden = isHidden
+  }
+
+  private func delayHidingControls() {
+    if let hidingControlTimer = hidingControlTimer {
+      hidingControlTimer.invalidate()
+    }
+    hidingControlTimer = Timer.scheduledTimer(withTimeInterval: hideControlsTimeInterval, repeats: false) { [weak self] (timer) in
+      if self?.isPlaying == true {
+        self?.hideControls(true)
+      } else {
+        self?.delayHidingControls()
+      }
+    }
+  }
+
+  private func showSelectorModalController(_ modalController: SelectorModalViewController) {
+    present(modalController, animated: true, completion: nil)
+    modalController.config = config.selectorModalConfig
+  }
+
+  private func refreshPlayButtonImage() {
+    if isPlaying {
+      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    } else {
+      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    }
+  }
+
   private func reloadQualitySetting() {
     qualityButton.isHidden = videoQualities.isEmpty
   }
@@ -420,8 +437,83 @@ extension CLIPlayerController {
       refreshInternalPlayer()
     }
   }
+
+  private func animateOverlaySeekButton(container: UIView, infoView: UIView, arrowsContainer: UIStackView, toLeft: Bool) {
+    infoView.isHidden = false
+    infoView.alpha = 1
+    container.backgroundColor = .init(red: 1, green: 1, blue: 1, alpha: 0.4)
+    container.layer.cornerRadius = container.frame.height / 2
+    for subView in arrowsContainer.arrangedSubviews {
+      subView.alpha = 0
+    }
+    if toLeft {
+      arrowsContainer.arrangedSubviews[0].alpha = 1
+    } else {
+      arrowsContainer.arrangedSubviews[arrowsContainer.arrangedSubviews.count - 1].alpha = 1
+    }
+    let enumeratedItems = toLeft ? arrowsContainer.subviews.enumerated() : arrowsContainer.subviews.reversed().enumerated()
+    for (index, item) in enumeratedItems {
+      item.alpha = 0
+
+      DispatchQueue.main.asyncAfter(deadline: .now() + (0.1 * Double(index))) {
+        UIView.animate(withDuration: 0.2) {
+          item.alpha = 1
+        } completion: { (completed) in
+          item.alpha = 0
+        }
+      }
+    }
+
+    UIView.animate(withDuration: 1) {
+      infoView.alpha = 0
+      container.backgroundColor = .clear
+    } completion: { (completed) in
+      infoView.isHidden = true
+    }
+  }
+
+  private func refreshPlayerForGoogleCast() {
+    externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    externalPlayerDeviceLabel.text = " "
+    externalPlayerTitleLabel.text = "Chrome Cast"
+    externalPlayerMaskView.isHidden = false
+    mirrorButton.isHidden = true
+    qualityButton.isHidden = true
+    fillModeButton.isHidden = true
+    airPlayButton.forceHidden = true
+  }
+
+  private func refreshPlayerForAirplay() {
+    externalPlayerDeviceLabel.text = " "
+    externalPlayerTitleLabel.text = "AirPlay"
+    externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    let currentRoute = AVAudioSession.sharedInstance().currentRoute
+    for output in currentRoute.outputs {
+      if output.portType == AVAudioSession.Port.airPlay {
+        externalPlayerDeviceLabel.text = "This video is playing on \"\(output.portName)\""
+        break
+      }
+    }
+    externalPlayerMaskView.isHidden = false
+    mirrorButton.isHidden = true
+    fillModeButton.isHidden = true
+    googleCastButton.isHidden = true
+    rate = currentSpeed
+  }
+
+  private func refreshInternalPlayer() {
+    externalPlayerMaskView.isHidden = true
+    mirrorButton.isHidden = false
+    googleCastButton.isHidden = false
+    fillModeButton.isHidden = false
+    airPlayButton.forceHidden = nil
+    airPlayButton.showIfAvailable()
+    reloadQualitySetting()
+    rate = currentSpeed
+  }
 }
 
+//MARK: Player Delegate
 extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   public func playerReady(_ player: Player) {
     print("playerReady")
@@ -486,100 +578,7 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   }
 }
 
-
-extension CLIPlayerController {
-  public func setClassTitle(_ text: String?) {
-    titleLabel.text = text
-  }
-
-  public func setClassDescription(_ text: String?) {
-    descriptionLabel.text = text
-  }
-
-  public func setClassDescription(artistName: String, duration: String, genre: String, level: String) {
-    let text = "\(artistName) | \(duration)\n\(genre) | \(level)"
-    setClassDescription(text)
-  }
-
-  public func setEndClassButtonText(_ text: String?) {
-    endClassButton.setTitle(text, for: .normal)
-  }
-  
-  func animateOverlaySeekButton(container: UIView, infoView: UIView, arrowsContainer: UIStackView, toLeft: Bool) {
-    infoView.isHidden = false
-    infoView.alpha = 1
-    container.backgroundColor = .init(red: 1, green: 1, blue: 1, alpha: 0.4)
-    container.layer.cornerRadius = container.frame.height / 2
-    for subView in arrowsContainer.arrangedSubviews {
-      subView.alpha = 0
-    }
-    if toLeft {
-      arrowsContainer.arrangedSubviews[0].alpha = 1
-    } else {
-      arrowsContainer.arrangedSubviews[arrowsContainer.arrangedSubviews.count - 1].alpha = 1
-    }
-    let enumeratedItems = toLeft ? arrowsContainer.subviews.enumerated() : arrowsContainer.subviews.reversed().enumerated()
-    for (index, item) in enumeratedItems {
-      item.alpha = 0
-      
-      DispatchQueue.main.asyncAfter(deadline: .now() + (0.1 * Double(index))) {
-        UIView.animate(withDuration: 0.2) {
-          item.alpha = 1
-        } completion: { (completed) in
-          item.alpha = 0
-        }
-      }
-    }
-    
-    UIView.animate(withDuration: 1) {
-      infoView.alpha = 0
-      container.backgroundColor = .clear
-    } completion: { (completed) in
-      infoView.isHidden = true
-    }
-  }
-
-  func refreshPlayerForGoogleCast() {
-    externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
-    externalPlayerDeviceLabel.text = " "
-    externalPlayerTitleLabel.text = "Chrome Cast"
-    externalPlayerMaskView.isHidden = false
-    mirrorButton.isHidden = true
-    qualityButton.isHidden = true
-    fillModeButton.isHidden = true
-    airPlayButton.forceHidden = true
-  }
-
-  func refreshPlayerForAirplay() {
-    externalPlayerDeviceLabel.text = " "
-    externalPlayerTitleLabel.text = "AirPlay"
-    externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
-    let currentRoute = AVAudioSession.sharedInstance().currentRoute
-    for output in currentRoute.outputs {
-      if output.portType == AVAudioSession.Port.airPlay {
-        externalPlayerDeviceLabel.text = "This video is playing on \"\(output.portName)\""
-        break
-      }
-    }
-    externalPlayerMaskView.isHidden = false
-    mirrorButton.isHidden = true
-    fillModeButton.isHidden = true
-    googleCastButton.isHidden = true
-    rate = currentSpeed
-  }
-
-  func refreshInternalPlayer() {
-    externalPlayerMaskView.isHidden = true
-    mirrorButton.isHidden = false
-    googleCastButton.isHidden = false
-    fillModeButton.isHidden = false
-    airPlayButton.forceHidden = nil
-    airPlayButton.showIfAvailable()
-    reloadQualitySetting()
-    rate = currentSpeed
-  }
-}
-
+//MARK: Google Cast Listeners
 extension CLIPlayerController: GCKSessionManagerListener {
   public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
     print("didStart session: GCKCastSession", session)
@@ -590,8 +589,9 @@ extension CLIPlayerController: GCKSessionManagerListener {
     googleCastController?.streamPositionSlider = progressSlider
     googleCastController?.streamPositionLabel = currentTimeLabel
     if let url = player.url {
-      let mediaInfo = GCKMediaInformationBuilder(contentURL: url).build()
-        CLIGoogleCastHelper.shared.loadMedia(mediaInfo: mediaInfo, byAppending: false)
+      let builder = GCKMediaInformationBuilder(contentURL: url)
+      builder.metadata = googleCastMetadata
+      CLIGoogleCastHelper.shared.loadMedia(mediaInfo: builder.build(), byAppending: false)
     }
     refreshPlayerForGoogleCast()
     if let friendlyName = session.device.friendlyName {
@@ -600,20 +600,40 @@ extension CLIPlayerController: GCKSessionManagerListener {
 
   }
 
-  public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
+//  public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
+//    let currentTime = googleCastController?.lastKnownStreamPosition
+//    googleCastController?.streamPositionSlider = nil
+//    googleCastController?.streamPositionLabel = nil
+//    googleCastController?.delegate = nil
+//    googleCastController = nil
+//    if let currentTime = currentTime {
+//      if currentTime.isNaN {
+//        stop()
+//      } else {
+//        seek(to: currentTime, relative: false)
+//      }
+//    }
+//  }
+
+  public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
     let currentTime = googleCastController?.lastKnownStreamPosition
     googleCastController?.streamPositionSlider = nil
     googleCastController?.streamPositionLabel = nil
     googleCastController?.delegate = nil
     googleCastController = nil
-    if let currentTime = currentTime {
-      seek(to: currentTime, relative: false)
-    }
-  }
 
-  public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
     refreshInternalPlayer()
-    playFromCurrentTime()
+
+    if let currentTime = currentTime {
+      if currentTime.isNaN {
+        seek(to: 0, relative: false)
+        stop()
+      } else {
+        seek(to: currentTime, relative: false)
+        playFromCurrentTime()
+      }
+    }
+
     session.remoteMediaClient?.remove(self)
   }
 }
@@ -631,6 +651,7 @@ extension CLIPlayerController: GCKUIMediaControllerDelegate {
   }
 }
 
+//MARK: Player Controls
 extension CLIPlayerController {
   public var googleCasting: Bool {
     googleCastController?.mediaLoaded == true
@@ -705,6 +726,9 @@ extension CLIPlayerController {
   }
 
   func seekInternalPlayer(to toTime: TimeInterval, relative: Bool) {
+    if toTime.isNaN {
+      return
+    }
     var newTime = relative ? player.currentTimeInterval + toTime : toTime
     newTime = min(newTime, player.maximumDuration - 1)
     newTime = max(newTime, 0)
@@ -732,5 +756,25 @@ extension CLIPlayerController {
     } else {
       player.stop()
     }
+  }
+}
+
+//MARK: Miscs
+extension CLIPlayerController {
+  public func setClassTitle(_ text: String?) {
+    titleLabel.text = text
+  }
+
+  public func setClassDescription(_ text: String?) {
+    descriptionLabel.text = text
+  }
+
+  public func setClassDescription(artistName: String, duration: String, genre: String, level: String) {
+    let text = "\(artistName) | \(duration)\n\(genre) | \(level)"
+    setClassDescription(text)
+  }
+
+  public func setEndClassButtonText(_ text: String?) {
+    endClassButton.setTitle(text, for: .normal)
   }
 }

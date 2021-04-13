@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
     // Override point for customization after application launch.
     let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: googleCastAppId))
     options.physicalVolumeButtonsWillControlDeviceVolume = true
+    options.disableDiscoveryAutostart = false
+    options.startDiscoveryAfterFirstTapOnCastButton = false
     GCKCastContext.setSharedInstanceWith(options)
     GCKCastContext.sharedInstance().useDefaultExpandedMediaControls = false
     GCKLogger.sharedInstance().delegate = self

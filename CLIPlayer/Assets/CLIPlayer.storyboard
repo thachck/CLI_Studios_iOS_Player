@@ -642,7 +642,7 @@ Contemporary | Intermediate </string>
                             <constraint firstItem="gP9-pd-hvD" firstAttribute="leading" secondItem="8ne-S7-9wL" secondAttribute="leading" id="JTq-gl-gEe"/>
                             <constraint firstItem="jyG-wc-I1a" firstAttribute="height" relation="lessThanOrEqual" secondItem="Nhi-2O-SUh" secondAttribute="height" multiplier="0.8" id="Ojz-hw-YWa"/>
                             <constraint firstItem="jyG-wc-I1a" firstAttribute="centerY" secondItem="Nhi-2O-SUh" secondAttribute="centerY" id="YzP-rb-fwS"/>
-                            <constraint firstItem="jyG-wc-I1a" firstAttribute="width" secondItem="8ne-S7-9wL" secondAttribute="width" multiplier="0.7" id="g8u-bh-gtU"/>
+                            <constraint firstItem="jyG-wc-I1a" firstAttribute="width" secondItem="Nhi-2O-SUh" secondAttribute="width" multiplier="0.7" id="g8u-bh-gtU"/>
                             <constraint firstItem="jyG-wc-I1a" firstAttribute="centerX" secondItem="Nhi-2O-SUh" secondAttribute="centerX" id="hHq-I6-g4W"/>
                             <constraint firstItem="jyG-wc-I1a" firstAttribute="width" secondItem="Nhi-2O-SUh" secondAttribute="width" multiplier="0.5" id="iOF-va-Nv6"/>
                             <constraint firstItem="jyG-wc-I1a" firstAttribute="height" secondItem="Nhi-2O-SUh" secondAttribute="height" multiplier="0.5" priority="250" id="jO3-dB-DP7"/>
@@ -694,6 +694,71 @@ Contemporary | Intermediate </string>
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="159" y="597"/>
+        </scene>
+        <!--Modal Wrapper View Controller-->
+        <scene sceneID="g5o-I6-jbl">
+            <objects>
+                <viewController storyboardIdentifier="ModalWrapperViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cZ6-MR-55F" customClass="ModalWrapperViewController" customModule="CLIPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="A5I-lW-Pfv">
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydt-nV-MCV" userLabel="BackdropView">
+                                <rect key="frame" x="44" y="0.0" width="808" height="414"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="YO2-3z-xV6" appends="YES" id="CU3-KU-ad5"/>
+                                </connections>
+                            </view>
+                            <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="OrK-5S-rit">
+                                <rect key="frame" x="224" y="62" width="448" height="290"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="yfb-tn-lRu"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.34857997759999998" colorSpace="custom" customColorSpace="displayP3"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="ydt-nV-MCV" firstAttribute="top" secondItem="A5I-lW-Pfv" secondAttribute="top" id="80P-So-Y7i"/>
+                            <constraint firstItem="ydt-nV-MCV" firstAttribute="leading" secondItem="yfb-tn-lRu" secondAttribute="leading" id="8Rt-JW-lXQ"/>
+                            <constraint firstItem="OrK-5S-rit" firstAttribute="width" secondItem="A5I-lW-Pfv" secondAttribute="width" multiplier="0.5" id="RSs-T3-ivS"/>
+                            <constraint firstItem="OrK-5S-rit" firstAttribute="centerX" secondItem="A5I-lW-Pfv" secondAttribute="centerX" id="TB8-Gw-SYg"/>
+                            <constraint firstItem="ydt-nV-MCV" firstAttribute="trailing" secondItem="yfb-tn-lRu" secondAttribute="trailing" id="bhj-Vn-N5o"/>
+                            <constraint firstItem="OrK-5S-rit" firstAttribute="width" secondItem="A5I-lW-Pfv" secondAttribute="width" multiplier="0.7" id="dcJ-Sz-6Ly"/>
+                            <constraint firstItem="OrK-5S-rit" firstAttribute="height" secondItem="A5I-lW-Pfv" secondAttribute="height" multiplier="0.7" priority="250" id="dmD-B2-MSj"/>
+                            <constraint firstAttribute="bottom" secondItem="ydt-nV-MCV" secondAttribute="bottom" id="fr5-PN-ONx"/>
+                            <constraint firstItem="OrK-5S-rit" firstAttribute="centerY" secondItem="A5I-lW-Pfv" secondAttribute="centerY" id="gcV-Fu-V0m"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="dcJ-Sz-6Ly"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="dcJ-Sz-6Ly"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="stackView" destination="OrK-5S-rit" id="4R8-fH-mGm"/>
+                        <outlet property="view" destination="A5I-lW-Pfv" id="3Hc-0x-1NU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NDy-7W-CUK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="YO2-3z-xV6">
+                    <connections>
+                        <action selector="viewOutsideDidTapped:" destination="cZ6-MR-55F" id="vUw-3Y-ldM"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="159" y="1457"/>
         </scene>
     </scenes>
     <resources>
