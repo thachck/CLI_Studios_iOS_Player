@@ -18,7 +18,7 @@ class SelectorModalViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   var items: [SelectorModalItem] = []
   var isPresenting = false
-  var config: SelectorModalConfig! {
+  var config: SelectorModalConfig? {
     didSet {
       applyConfig()
     }
@@ -42,7 +42,9 @@ class SelectorModalViewController: UIViewController {
   }
   
   func applyConfig() {
-    titleLabel.font = config.titleFont
+    if let config = config {
+      titleLabel.font = config.titleFont
+    }
   }
   
   @IBAction func viewOutsideDidTapped(_ sender: Any) {
@@ -63,7 +65,9 @@ extension SelectorModalViewController: UITableViewDelegate, UITableViewDataSourc
     let cell = tableView.dequeueReusableCell(withIdentifier: "SelectorCell") ?? UITableViewCell()
     let item = items[indexPath.row]
     cell.textLabel?.text = item.title
-    cell.textLabel?.font = config.itemFont
+    if let config = config {
+      cell.textLabel?.font = config.itemFont
+    }
     cell.accessoryType = item.selected ? .checkmark : .none
     
     return cell

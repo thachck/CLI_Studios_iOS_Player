@@ -53,7 +53,6 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var fillModeButton: UIButton!
   @IBOutlet weak var airPlayButton: CLIAirPlayButton!
   @IBOutlet weak var googleCastButton: CLIGoogleCastButton!
-
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var progressSlider: UISlider!
@@ -61,14 +60,6 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var topControlsView: UIView!
   @IBOutlet weak var bottomControlsView: UIView!
   @IBOutlet weak var progressContainerView: UIStackView!
-  @IBOutlet weak var rewindInfoContainerView: UIStackView!
-  @IBOutlet weak var forwardInfoContainerView: UIStackView!
-  @IBOutlet weak var forwardOverlayContainerView: UIView!
-  @IBOutlet weak var rewindOverlayContainerView: UIView!
-  @IBOutlet weak var rewindArrowsContainer: UIStackView!
-  @IBOutlet weak var forwardArrowsContainer: UIStackView!
-  @IBOutlet weak var forwardOverlayLabel: UILabel!
-  @IBOutlet weak var rewindOverlayLabel: UILabel!
   @IBOutlet weak var topControlsStackView: UIStackView!
   @IBOutlet weak var externalPlayerMaskView: UIView!
   @IBOutlet weak var externalPlayerDeviceLabel: UILabel!
@@ -77,7 +68,7 @@ public class CLIPlayerController: UIViewController {
 
   //MARK: Properties
   public override var prefersStatusBarHidden: Bool { true }
-  public var config: CLIPlayerConfig! {
+  public var config: CLIPlayerConfig? {
     didSet {
       applyConfig()
     }
@@ -146,8 +137,18 @@ public class CLIPlayerController: UIViewController {
   private var vimeoSortedQualities: [Int] = []
   private let hlsParser = HLSParser()
   private var hidingControlTimer: Timer?
+  private var delaySeekTimer: Timer?
+  private var delaySetEstimatedTimeTimer: Timer?
   private var sliderIsDragging = false
   private var googleCastController: GCKUIMediaController?
+  private var estimatedCurrentTime: TimeInterval? {
+    didSet {
+      if let estimatedCurrentTime = estimatedCurrentTime, !player.maximumDuration.isNaN {
+        progressSlider.value = Float(estimatedCurrentTime / player.maximumDuration)
+        updateCurrentTimeText(estimatedCurrentTime)
+      }
+    }
+  }
   //MARK: Setups
 
   public class func instance() -> CLIPlayerController {
@@ -167,6 +168,22 @@ public class CLIPlayerController: UIViewController {
 
     setUpGoogleCast()
     setUpNotificationListeners()
+  }
+
+  public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let controller = segue.destination as? OverlaySeekButtonViewController {
+      _ = controller.view
+      controller.isRewind = segue.identifier == "RewindEmbedSegue"
+      controller.infoOffset = controller.isRewind ? 50 : -50
+      controller.onSingleTapped = { [weak self] in
+        self?.controlsViewTappped(nil)
+      }
+      controller.onDoubleTapped = { [weak self] in
+        if let self = self {
+          controller.isRewind ? self.rewindButtonTapped(nil) : self.forwardButtonTapped(nil)
+        }
+      }
+    }
   }
 
   private func setUpGoogleCast() {
@@ -225,14 +242,20 @@ public class CLIPlayerController: UIViewController {
   }
 
   private func applyConfig() {
-    titleLabel.font = config.classTitleFont
-    descriptionLabel.font = config.classDescriptionFont
-    endClassButton.titleLabel?.font = config.endClassButtonFont
-    currentTimeLabel.font = config.currentTimeFont
-    rewindOverlayLabel.font = config.seekOverlayFont
-    forwardOverlayLabel.font = config.seekOverlayFont
-    externalPlayerTitleLabel.font = config.airPlayTitleFont
-    externalPlayerDeviceLabel.font = config.airPlayDeviceFont
+    if let config = config {
+      titleLabel.font = config.classTitleFont
+      descriptionLabel.font = config.classDescriptionFont
+      endClassButton.titleLabel?.font = config.endClassButtonFont
+      currentTimeLabel.font = config.currentTimeFont
+      externalPlayerTitleLabel.font = config.airPlayTitleFont
+      externalPlayerDeviceLabel.font = config.airPlayDeviceFont
+
+      for controller in children {
+        if let seekController = controller as? OverlaySeekButtonViewController {
+          seekController.timeLabel.font = config.seekOverlayFont
+        }
+      }
+    }
   }
 
   private var isLandscape: Bool {
@@ -249,18 +272,18 @@ public class CLIPlayerController: UIViewController {
     }
   }
 
-  @IBAction func controlsViewTappped(_ sender: Any) {
+  @IBAction func controlsViewTappped(_ sender: Any?) {
     hideControls(false)
     bottomControlsView.isHidden = false
     delayHidingControls()
   }
 
-  @IBAction func rewindButtonTapped(_ sender: Any) {
+  @IBAction func rewindButtonTapped(_ sender: Any?) {
     delayHidingControls()
     seek(to: -15, relative: true)
   }
 
-  @IBAction func forwardButtonTapped(_ sender: Any) {
+  @IBAction func forwardButtonTapped(_ sender: Any?) {
     delayHidingControls()
     seek(to: 15, relative: true)
   }
@@ -333,17 +356,7 @@ public class CLIPlayerController: UIViewController {
     stop()
     dismiss(animated: true, completion: nil)
   }
-  
-  @IBAction func rewindTapGestureTapped(_ sender: Any) {
-    rewindButtonTapped(sender)
-    animateOverlaySeekButton(container: rewindOverlayContainerView, infoView: rewindInfoContainerView, arrowsContainer: rewindArrowsContainer, toLeft: false)
-  }
-  
-  @IBAction func forwardTapGestureTapped(_ sender: Any) {
-    forwardButtonTapped(sender)
-    animateOverlaySeekButton(container: forwardOverlayContainerView, infoView: forwardInfoContainerView, arrowsContainer: forwardArrowsContainer, toLeft: true)
-  }
-  
+
   @IBAction func airplayButtonTapped(_ sender: Any) {
     delayHidingControls()
     airPlayButton.showAirPlayModal()
@@ -384,7 +397,7 @@ extension CLIPlayerController {
 
   private func showSelectorModalController(_ modalController: SelectorModalViewController) {
     present(modalController, animated: true, completion: nil)
-    modalController.config = config.selectorModalConfig
+    modalController.config = config?.selectorModalConfig
   }
 
   private func refreshPlayButtonImage() {
@@ -435,40 +448,6 @@ extension CLIPlayerController {
       refreshPlayerForAirplay()
     } else {
       refreshInternalPlayer()
-    }
-  }
-
-  private func animateOverlaySeekButton(container: UIView, infoView: UIView, arrowsContainer: UIStackView, toLeft: Bool) {
-    infoView.isHidden = false
-    infoView.alpha = 1
-    container.backgroundColor = .init(red: 1, green: 1, blue: 1, alpha: 0.4)
-    container.layer.cornerRadius = container.frame.height / 2
-    for subView in arrowsContainer.arrangedSubviews {
-      subView.alpha = 0
-    }
-    if toLeft {
-      arrowsContainer.arrangedSubviews[0].alpha = 1
-    } else {
-      arrowsContainer.arrangedSubviews[arrowsContainer.arrangedSubviews.count - 1].alpha = 1
-    }
-    let enumeratedItems = toLeft ? arrowsContainer.subviews.enumerated() : arrowsContainer.subviews.reversed().enumerated()
-    for (index, item) in enumeratedItems {
-      item.alpha = 0
-
-      DispatchQueue.main.asyncAfter(deadline: .now() + (0.1 * Double(index))) {
-        UIView.animate(withDuration: 0.2) {
-          item.alpha = 1
-        } completion: { (completed) in
-          item.alpha = 0
-        }
-      }
-    }
-
-    UIView.animate(withDuration: 1) {
-      infoView.alpha = 0
-      container.backgroundColor = .clear
-    } completion: { (completed) in
-      infoView.isHidden = true
     }
   }
 
@@ -548,16 +527,22 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   }
 
   public func playerCurrentTimeDidChange(_ player: Player) {
-    if googleCasting || player.currentTimeInterval.isNaN || player.maximumDuration.isNaN {
+    if googleCasting || player.currentTimeInterval.isNaN || player.maximumDuration.isNaN || estimatedCurrentTime != nil {
       return
     }
 
-    let progress = player.currentTimeInterval / player.maximumDuration
+    let currentTimeInterval = player.currentTimeInterval
+
+    let progress = currentTimeInterval / player.maximumDuration
     if !sliderIsDragging {
       progressSlider.value = Float(progress)
     }
 
-    let currentSeconds = Int(player.currentTimeInterval)
+    updateCurrentTimeText(currentTimeInterval)
+  }
+
+  func updateCurrentTimeText(_ currentTimeInterval: TimeInterval) {
+    let currentSeconds = Int(currentTimeInterval)
     currentTimeLabel.text = String(format: "%02d:%02d", currentSeconds / 60, currentSeconds % 60)
   }
 
@@ -600,20 +585,6 @@ extension CLIPlayerController: GCKSessionManagerListener {
 
   }
 
-//  public func sessionManager(_ sessionManager: GCKSessionManager, willEnd session: GCKCastSession) {
-//    let currentTime = googleCastController?.lastKnownStreamPosition
-//    googleCastController?.streamPositionSlider = nil
-//    googleCastController?.streamPositionLabel = nil
-//    googleCastController?.delegate = nil
-//    googleCastController = nil
-//    if let currentTime = currentTime {
-//      if currentTime.isNaN {
-//        stop()
-//      } else {
-//        seek(to: currentTime, relative: false)
-//      }
-//    }
-//  }
 
   public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
     let currentTime = googleCastController?.lastKnownStreamPosition
@@ -725,14 +696,37 @@ extension CLIPlayerController {
     }
   }
 
+  func delaySeekInternalPlayer(toTime: TimeInterval) {
+    if let delaySeekTimer = delaySeekTimer {
+      delaySeekTimer.invalidate()
+    }
+
+    delaySeekTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] (timer) in
+      self?.player.seek(to: CMTimeMake(value: Int64(toTime), timescale: 1))
+    }
+  }
+
+  func delaySetEstimatedCurrentTime(_ toTime: TimeInterval?) {
+    if let delaySetEstimatedTimeTimer = delaySetEstimatedTimeTimer {
+      delaySetEstimatedTimeTimer.invalidate()
+    }
+
+    delaySetEstimatedTimeTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] (timer) in
+      self?.estimatedCurrentTime = toTime
+    }
+  }
+
   func seekInternalPlayer(to toTime: TimeInterval, relative: Bool) {
     if toTime.isNaN {
       return
     }
-    var newTime = relative ? player.currentTimeInterval + toTime : toTime
+    let currentTimeInterval = estimatedCurrentTime ?? player.currentTimeInterval
+    var newTime = relative ? currentTimeInterval + toTime : toTime
     newTime = min(newTime, player.maximumDuration - 1)
     newTime = max(newTime, 0)
-    player.seek(to: CMTimeMake(value: Int64(newTime), timescale: 1))
+    estimatedCurrentTime = newTime
+    delaySeekInternalPlayer(toTime: newTime)
+    delaySetEstimatedCurrentTime(nil)
   }
 
   func seekGoogleCastPlayer(to toTime: TimeInterval, relative: Bool) {
