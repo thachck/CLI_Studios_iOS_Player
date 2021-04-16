@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>CLI Player would like to access bluetooth to use chrome cast.</string>
+	<string>CLI Player would like to access local network to use chrome cast.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>CLI Player would like to access bluetooth to use chrome cast.</string>
 	<key>NSBonjourServices</key>

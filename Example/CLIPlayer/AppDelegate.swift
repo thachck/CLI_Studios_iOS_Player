@@ -12,9 +12,9 @@ import GoogleCast
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
   var window: UIWindow?
+  var orientationLock = UIInterfaceOrientationMask.all
   let googleCastAppId = "27C3512B"
   let kDebugLoggingEnabled = true
-
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
@@ -35,5 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
     if (kDebugLoggingEnabled) {
       print(function + " - " + message)
     }
+  }
+
+  func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+    orientationLock
   }
 }

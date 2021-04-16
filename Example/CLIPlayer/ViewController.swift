@@ -11,6 +11,13 @@ import CLIPlayer
 import GoogleCast
 
 class ViewController: UIViewController {
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if let delegate = UIApplication.shared.delegate as? AppDelegate {
+      delegate.orientationLock = .landscapeRight
+      UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+    }
+  }
 
   @IBAction func playHLSTapped(_ sender: Any) {
     let videoUrl = URL(string: "https://d2t9el598942m2.cloudfront.net/MovementSpeaks_2221_Brandon_Oneal_BegJazz/MovementSpeaks_2221_Brandon_Oneal_BegJazz.m3u8")

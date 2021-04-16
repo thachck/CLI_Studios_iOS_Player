@@ -128,13 +128,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wHj-P2-iTh" userLabel="Rewind Overlay Container View">
-                                        <rect key="frame" x="-100" y="-414" width="399" height="1242"/>
+                                        <rect key="frame" x="-100" y="-414" width="398.5" height="1242"/>
                                         <connections>
                                             <segue destination="aZI-pV-4rQ" kind="embed" identifier="RewindEmbedSegue" id="MFA-ky-S9h"/>
                                         </connections>
                                     </containerView>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jbG-tU-uhG" userLabel="Forward Overlay Container View">
-                                        <rect key="frame" x="598" y="-414" width="398" height="1242"/>
+                                        <rect key="frame" x="597.5" y="-414" width="398.5" height="1242"/>
                                         <connections>
                                             <segue destination="aZI-pV-4rQ" kind="embed" identifier="ForwardEmbedSegue" id="pPO-fJ-VnK"/>
                                         </connections>
@@ -400,6 +400,9 @@ Contemporary | Intermediate </string>
                                                         <state key="normal" title="✕">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="closeButtonTapped:" destination="lZL-MP-MeT" eventType="touchUpInside" id="9Ek-B6-Llt"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>

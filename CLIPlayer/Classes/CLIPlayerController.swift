@@ -39,6 +39,12 @@ public struct CLIVideoQuality: Equatable {
   static var zero: CLIVideoQuality { CLIVideoQuality(width: 0, height: 0, bandwidth: 0) }
 }
 
+ @objc public protocol CLIPlayerControllerDelegate {
+  @objc optional func playerControllerWillAppear(_ player: CLIPlayerController)
+  @objc optional func playerControllerWillDisapear(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidDisapear(_ player: CLIPlayerController)
+}
+
 public class CLIPlayerController: UIViewController {
   //MARK: IBOutlets
   @IBOutlet weak var playerContainerView: UIView!
@@ -73,11 +79,7 @@ public class CLIPlayerController: UIViewController {
       applyConfig()
     }
   }
-  public var forceLandscape = true
-  public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    forceLandscape ? .landscape : .all
-  }
-  public override var shouldAutorotate: Bool { true }
+  public var delegate: CLIPlayerControllerDelegate?
   var player: Player!
   public var initialTimeInterval: TimeInterval = 0
   public var hideControlsTimeInterval: TimeInterval = 3
@@ -218,9 +220,20 @@ public class CLIPlayerController: UIViewController {
   }
 
   public override func viewWillAppear(_ animated: Bool) {
+    delegate?.playerControllerWillAppear?(self)
     super.viewWillAppear(animated)
     setUpUI()
     try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+  }
+
+  public override func viewWillDisappear(_ animated: Bool) {
+    delegate?.playerControllerWillDisapear?(self)
+    super.viewWillDisappear(animated)
+  }
+
+  public override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    delegate?.playerControllerDidDisapear?(self)
   }
 
   public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -259,7 +272,7 @@ public class CLIPlayerController: UIViewController {
   }
 
   private var isLandscape: Bool {
-    forceLandscape ? true : UIDevice.current.orientation.isLandscape
+    UIDevice.current.orientation.isLandscape
   }
 
   //MARK: Actions
