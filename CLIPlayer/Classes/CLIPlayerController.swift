@@ -758,7 +758,7 @@ extension CLIPlayerController {
   }
 
   func stop() {
-    if googleCasting {
+    if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
       GCKCastContext.sharedInstance().sessionManager.endSessionAndStopCasting(true)
     } else {
       player.stop()
