@@ -39,10 +39,30 @@ public struct CLIVideoQuality: Equatable {
   static var zero: CLIVideoQuality { CLIVideoQuality(width: 0, height: 0, bandwidth: 0) }
 }
 
+public enum CLIPlayerOutput {
+  case InternalPlayer
+  case AirPlay
+  case GoogleCast
+
+  public var description: String {
+    switch self {
+      case .InternalPlayer:
+        return "iOS"
+      case .AirPlay:
+        return "AirPlay"
+      case .GoogleCast:
+        return "Chrome Cast"
+    }
+  }
+}
+
  @objc public protocol CLIPlayerControllerDelegate {
   @objc optional func playerControllerWillAppear(_ player: CLIPlayerController)
   @objc optional func playerControllerWillDisapear(_ player: CLIPlayerController)
   @objc optional func playerControllerDidDisapear(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidPlay(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidPause(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidStop(_ player: CLIPlayerController)
 }
 
 public class CLIPlayerController: UIViewController {
@@ -87,7 +107,7 @@ public class CLIPlayerController: UIViewController {
     didSet {
       if let url = url {
         player.url = url
-        player.playFromBeginning()
+        playFromBeginning()
 
         parseHlsInfo(url: url)
       }
@@ -101,7 +121,6 @@ public class CLIPlayerController: UIViewController {
     }
   }
   public var googleCastMetadata: GCKMediaMetadata?
-
   public private(set) var videoType: CLIVideoType = .hls
   var videoQualities: [CLIVideoQuality] = [] {
     didSet {
@@ -135,6 +154,8 @@ public class CLIPlayerController: UIViewController {
       mirrorButton.flipX()
     }
   }
+  public private(set) var output = CLIPlayerOutput.InternalPlayer
+
   private var vimeoVideo: YTVimeoVideo?
   private var vimeoSortedQualities: [Int] = []
   private let hlsParser = HLSParser()
@@ -450,6 +471,7 @@ extension CLIPlayerController {
         self?.videoQualities = keys.map { CLIVideoQuality(width: 0, height: $0, bandwidth: 0, url: video.streamURLs[$0]) }
         if let lastQuality = self?.videoQualities.last {
           self?.currentQuality = lastQuality
+          self?.playFromBeginning()
         }
       }
     }
@@ -465,6 +487,7 @@ extension CLIPlayerController {
   }
 
   private func refreshPlayerForGoogleCast() {
+    output = .GoogleCast
     externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "Chrome Cast"
@@ -476,6 +499,7 @@ extension CLIPlayerController {
   }
 
   private func refreshPlayerForAirplay() {
+    output = .AirPlay
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "AirPlay"
     externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
@@ -494,6 +518,7 @@ extension CLIPlayerController {
   }
 
   private func refreshInternalPlayer() {
+    output = .InternalPlayer
     externalPlayerMaskView.isHidden = true
     mirrorButton.isHidden = false
     googleCastButton.isHidden = false
@@ -699,6 +724,16 @@ extension CLIPlayerController {
     } else {
       player.pause()
     }
+    delegate?.playerControllerDidPause?(self)
+  }
+
+  func playFromBeginning() {
+    if googleCasting {
+      CLIGoogleCastHelper.shared.remoteMediaClient?.play()
+    } else {
+      player.playFromBeginning()
+    }
+    delegate?.playerControllerDidPlay?(self)
   }
 
   func playFromCurrentTime() {
@@ -707,6 +742,7 @@ extension CLIPlayerController {
     } else {
       player.playFromCurrentTime()
     }
+    delegate?.playerControllerDidPlay?(self)
   }
 
   func delaySeekInternalPlayer(toTime: TimeInterval) {
@@ -763,6 +799,7 @@ extension CLIPlayerController {
     } else {
       player.stop()
     }
+    delegate?.playerControllerDidStop?(self)
   }
 }
 
