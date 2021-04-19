@@ -11,12 +11,20 @@ import CLIPlayer
 import GoogleCast
 
 class ViewController: UIViewController {
+  func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
+    if let delegate = UIApplication.shared.delegate as? AppDelegate {
+      delegate.orientationLock = orientation
+    }
+  }
+
+  func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
+    self.lockOrientation(orientation)
+    UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
+  }
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    if let delegate = UIApplication.shared.delegate as? AppDelegate {
-      delegate.orientationLock = .landscapeRight
-      UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
-    }
+    lockOrientation(.portrait, andRotateTo: .portrait)
   }
 
   @IBAction func playHLSTapped(_ sender: Any) {
@@ -33,7 +41,10 @@ class ViewController: UIViewController {
     metadata.addImage(image)
     metadata.setString(thumbnail, forKey: "cli_cast_thumbnail")
     player.googleCastMetadata = metadata
-    present(player, animated: true)
+    lockOrientation(.landscapeRight, andRotateTo: .landscapeRight)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+      self.present(player, animated: true)
+    })
   }
 
   @IBAction func playVimeoTapped(_ sender: Any) {
@@ -49,6 +60,7 @@ class ViewController: UIViewController {
     metadata.addImage(image)
     metadata.setString(thumbnail, forKey: "cli_cast_thumbnail")
     player.googleCastMetadata = metadata
+    lockOrientation(.landscapeRight, andRotateTo: .landscapeRight)
     present(player, animated: true)
   }
 }

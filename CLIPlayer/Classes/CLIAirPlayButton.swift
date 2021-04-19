@@ -45,8 +45,13 @@ class CLIAirPlayButton: CLIControlButton {
     if let button = object as? UIButton {
       switch keyPath {
         case "alpha":
-          alpha = button.alpha
-          showIfAvailable()
+          DispatchQueue.main.async() { [weak self] in
+            if let self = self {
+              self.alpha = button.alpha
+              self.showIfAvailable()
+            }
+          }
+
         case "selected":
           isSelected = button.isSelected
         default:
