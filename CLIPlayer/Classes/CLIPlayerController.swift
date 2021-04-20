@@ -190,6 +190,23 @@ public class CLIPlayerController: UIViewController {
     }
 
     setUpGoogleCast()
+
+    NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+
+  @objc func applicationDidBecomeActive() {
+    if player.isExternalPlaybackActive {
+      refreshPlayerForAirplay()
+    } else {
+      refreshInternalPlayer()
+    }
+    if googleCasting {
+      refreshPlayerForGoogleCast()
+    }
   }
 
   public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -468,6 +485,9 @@ extension CLIPlayerController {
   }
 
   private func refreshPlayerForGoogleCast() {
+    if output == .GoogleCast {
+      return
+    }
     output = .GoogleCast
     player.playbackResumesWhenBecameActive = false
     player.playbackResumesWhenEnteringForeground = false
@@ -482,7 +502,12 @@ extension CLIPlayerController {
   }
 
   private func refreshPlayerForAirplay() {
+    if output == .AirPlay {
+      return
+    }
     output = .AirPlay
+    player.playbackPausesWhenBackgrounded = false
+    player.playbackPausesWhenResigningActive = false
     player.playbackResumesWhenBecameActive = true
     player.playbackResumesWhenEnteringForeground = true
     externalPlayerDeviceLabel.text = " "
@@ -503,7 +528,12 @@ extension CLIPlayerController {
   }
 
   private func refreshInternalPlayer() {
+    if output == .InternalPlayer {
+      return
+    }
     output = .InternalPlayer
+    player.playbackPausesWhenBackgrounded = true
+    player.playbackPausesWhenResigningActive = true
     player.playbackResumesWhenBecameActive = true
     player.playbackResumesWhenEnteringForeground = true
     externalPlayerMaskView.isHidden = true
@@ -520,6 +550,9 @@ extension CLIPlayerController {
 //MARK: Player Delegate
 extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   public func playerDidChangeExternalPlaybackActive(_ player: Player) {
+    if UIApplication.shared.applicationState != .active {
+      return
+    }
     if player.isExternalPlaybackActive {
       playFromCurrentTime()
       refreshPlayerForAirplay()
