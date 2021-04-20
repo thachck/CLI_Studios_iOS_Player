@@ -35,7 +35,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Player:
-    :commit: 966c92d11cdaf82a7ba8e2160bf2b4aa16ad53be
+    :commit: 9c9a26bd8fb34eafe89ad46f3c2e7012898e33d1
     :git: https://github.com/buubui/Player
 
 SPEC CHECKSUMS:
@@ -46,6 +46,6 @@ SPEC CHECKSUMS:
   Protobuf: adb85cd18a15bd1a777c158af9fd6e612a0e6d69
   YTVimeoExtractor: f4ed90f43e08d33d56c1d1aff3f4f64663747966
 
-PODFILE CHECKSUM: ec32ede2190d49a11134ec31061ffa0b630a30f8
+PODFILE CHECKSUM: 8b2dfe8d04d1c2abd57ce4bfa004f6b7454087f8
 
 COCOAPODS: 1.10.1

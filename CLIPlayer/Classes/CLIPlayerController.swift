@@ -190,7 +190,6 @@ public class CLIPlayerController: UIViewController {
     }
 
     setUpGoogleCast()
-    setUpNotificationListeners()
   }
 
   public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -211,15 +210,6 @@ public class CLIPlayerController: UIViewController {
 
   private func setUpGoogleCast() {
     GCKCastContext.sharedInstance().sessionManager.add(self)
-  }
-
-  private func setUpNotificationListeners() {
-//    AirPlay notification
-    NotificationCenter.default.addObserver(self, selector: #selector(self.screenConnectionChanged(_:)), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
-  }
-  
-  deinit {
-    NotificationCenter.default.removeObserver(self, name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
   }
 
   public override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -476,18 +466,11 @@ extension CLIPlayerController {
       }
     }
   }
-  
-  @objc func screenConnectionChanged(_ notification: Notification) {
-    if airPlayButton.isWirelessRouteActive {
-      playFromCurrentTime()
-      refreshPlayerForAirplay()
-    } else {
-      refreshInternalPlayer()
-    }
-  }
 
   private func refreshPlayerForGoogleCast() {
     output = .GoogleCast
+    player.playbackResumesWhenBecameActive = false
+    player.playbackResumesWhenEnteringForeground = false
     externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "Chrome Cast"
@@ -500,6 +483,8 @@ extension CLIPlayerController {
 
   private func refreshPlayerForAirplay() {
     output = .AirPlay
+    player.playbackResumesWhenBecameActive = true
+    player.playbackResumesWhenEnteringForeground = true
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "AirPlay"
     externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
@@ -519,6 +504,8 @@ extension CLIPlayerController {
 
   private func refreshInternalPlayer() {
     output = .InternalPlayer
+    player.playbackResumesWhenBecameActive = true
+    player.playbackResumesWhenEnteringForeground = true
     externalPlayerMaskView.isHidden = true
     mirrorButton.isHidden = false
     googleCastButton.isHidden = false
@@ -532,6 +519,15 @@ extension CLIPlayerController {
 
 //MARK: Player Delegate
 extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
+  public func playerDidChangeExternalPlaybackActive(_ player: Player) {
+    if player.isExternalPlaybackActive {
+      playFromCurrentTime()
+      refreshPlayerForAirplay()
+    } else {
+      refreshInternalPlayer()
+    }
+  }
+
   public func playerReady(_ player: Player) {
     print("playerReady")
     if initialTimeInterval > 0 {
