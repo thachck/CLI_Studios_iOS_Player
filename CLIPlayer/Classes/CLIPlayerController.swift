@@ -136,7 +136,7 @@ public class CLIPlayerController: UIViewController {
         player.preferredMaximumResolution = CGSize(width: currentQuality.width, height: currentQuality.height)
         player.preferredPeakBitRate = currentQuality.bandwidth
       } else {
-        initialTimeInterval = player.currentTimeInterval
+        initialTimeInterval = initialTimeInterval > 0 ? initialTimeInterval : player.currentTimeInterval
         player.url = currentQuality.url
       }
     }
@@ -155,6 +155,18 @@ public class CLIPlayerController: UIViewController {
     }
   }
   public private(set) var output = CLIPlayerOutput.InternalPlayer
+  public var currentTime: TimeInterval {
+    if player == nil {
+      return 0
+    }
+    return player.currentTimeInterval
+  }
+  public var duration: TimeInterval {
+    if player == nil {
+      return 0
+    }
+    return player.maximumDuration
+  }
 
   private var vimeoVideo: YTVimeoVideo?
   private var vimeoSortedQualities: [Int] = []
@@ -564,12 +576,12 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   public func playerReady(_ player: Player) {
     print("playerReady")
     if initialTimeInterval > 0 {
-      player.seek(to: CMTimeMake(value: Int64(initialTimeInterval), timescale: 1))
+      seek(to: initialTimeInterval, relative: false)
       initialTimeInterval = 0
     }
     hideControls(false)
     delayHidingControls()
-    if airPlayButton.isWirelessRouteActive {
+    if player.isExternalPlaybackActive {
       playFromCurrentTime()
     }
   }
