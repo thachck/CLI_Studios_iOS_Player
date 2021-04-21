@@ -62,7 +62,7 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerDidDisapear(_ player: CLIPlayerController)
   @objc optional func playerControllerDidPlay(_ player: CLIPlayerController)
   @objc optional func playerControllerDidPause(_ player: CLIPlayerController)
-  @objc optional func playerControllerDidStop(_ player: CLIPlayerController)
+  @objc optional func playerControllerWillStop(_ player: CLIPlayerController)
 }
 
 public class CLIPlayerController: UIViewController {
@@ -835,12 +835,12 @@ extension CLIPlayerController {
   }
 
   func stop() {
+    delegate?.playerControllerWillStop?(self)
     if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
       GCKCastContext.sharedInstance().sessionManager.endSessionAndStopCasting(true)
     } else {
       player.stop()
     }
-    delegate?.playerControllerDidStop?(self)
   }
 }
 
