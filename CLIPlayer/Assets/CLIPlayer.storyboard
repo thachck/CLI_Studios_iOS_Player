@@ -480,6 +480,7 @@ Contemporary | Intermediate </string>
                         <outlet property="externalPlayerMaskView" destination="pxh-qV-0xa" id="Wld-kl-h41"/>
                         <outlet property="externalPlayerTitleLabel" destination="95X-gZ-ibx" id="mYW-3G-tjh"/>
                         <outlet property="fillModeButton" destination="kUy-QP-kW2" id="LvC-LF-08q"/>
+                        <outlet property="forwardOverlayContainerView" destination="jbG-tU-uhG" id="KEn-yO-FvO"/>
                         <outlet property="googleCastButton" destination="gaL-Yg-yJQ" id="XhZ-tE-OB5"/>
                         <outlet property="mirrorButton" destination="Laf-nC-cfn" id="wiM-Gz-heW"/>
                         <outlet property="playButton" destination="0Nn-gZ-GyP" id="BDf-up-Fp2"/>
@@ -487,6 +488,7 @@ Contemporary | Intermediate </string>
                         <outlet property="progressContainerView" destination="3VQ-kR-xMy" id="nmR-IC-nyZ"/>
                         <outlet property="progressSlider" destination="FwY-j3-4aR" id="jfI-cb-YEh"/>
                         <outlet property="qualityButton" destination="g26-2k-uEe" id="jOn-qW-qNZ"/>
+                        <outlet property="rewindOverlayContainerView" destination="wHj-P2-iTh" id="MLi-rw-tDJ"/>
                         <outlet property="speedButton" destination="T35-an-rFp" id="hkZ-ep-sC7"/>
                         <outlet property="titleLabel" destination="Ouv-dY-edg" id="UHs-DS-L4A"/>
                         <outlet property="topControlsStackView" destination="jha-b9-bgX" id="OaJ-QR-NlJ"/>

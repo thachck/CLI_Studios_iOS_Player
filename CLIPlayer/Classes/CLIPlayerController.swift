@@ -60,6 +60,7 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerWillAppear(_ player: CLIPlayerController)
   @objc optional func playerControllerWillDisapear(_ player: CLIPlayerController)
   @objc optional func playerControllerDidDisapear(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidReady(_ player: CLIPlayerController)
   @objc optional func playerControllerDidPlay(_ player: CLIPlayerController)
   @objc optional func playerControllerDidPause(_ player: CLIPlayerController)
   @objc optional func playerControllerWillStop(_ player: CLIPlayerController)
@@ -91,6 +92,8 @@ public class CLIPlayerController: UIViewController {
   @IBOutlet weak var externalPlayerDeviceLabel: UILabel!
   @IBOutlet weak var externalPlayerTitleLabel: UILabel!
   @IBOutlet weak var externalPlayerImageView: UIImageView!
+  @IBOutlet weak var rewindOverlayContainerView: UIView!
+  @IBOutlet weak var forwardOverlayContainerView: UIView!
 
   //MARK: Properties
   public override var prefersStatusBarHidden: Bool { true }
@@ -101,13 +104,17 @@ public class CLIPlayerController: UIViewController {
   }
   public var delegate: CLIPlayerControllerDelegate?
   var player: Player!
+  public var noControls: Bool = false {
+    didSet {
+      toggleNoControls()
+    }
+  }
   public var initialTimeInterval: TimeInterval = 0
   public var hideControlsTimeInterval: TimeInterval = 3
   public var url: URL? {
     didSet {
       if let url = url {
         player.url = url
-        playFromBeginning()
 
         parseHlsInfo(url: url)
       }
@@ -327,7 +334,6 @@ public class CLIPlayerController: UIViewController {
 
   @IBAction func controlsViewTappped(_ sender: Any?) {
     hideControls(false)
-    bottomControlsView.isHidden = false
     delayHidingControls()
   }
 
@@ -421,6 +427,22 @@ public class CLIPlayerController: UIViewController {
 
 //MARK: Private methods
 extension CLIPlayerController {
+
+  private func toggleNoControls() {
+    if noControls {
+      hideControls(true)
+      player.allowsExternalPlayback = false
+      player.autoplay = false
+      rewindOverlayContainerView.isHidden = true
+      forwardOverlayContainerView.isHidden = true
+
+    } else {
+      player.allowsExternalPlayback = true
+      player.autoplay = true
+      rewindOverlayContainerView.isHidden = false
+      forwardOverlayContainerView.isHidden = false
+    }
+  }
   private func setUpUI() {
     setUpCloseButton()
   }
@@ -431,6 +453,9 @@ extension CLIPlayerController {
   }
 
   private func hideControls(_ isHidden: Bool) {
+    if noControls && !isHidden {
+      return
+    }
     topControlsView.isHidden = isHidden
     bottomControlsView.isHidden = isHidden
   }
@@ -584,6 +609,8 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
     if player.isExternalPlaybackActive {
       playFromCurrentTime()
     }
+
+    delegate?.playerControllerDidReady?(self)
   }
 
   public func playerPlaybackStateDidChange(_ player: Player) {
@@ -715,7 +742,7 @@ extension CLIPlayerController {
     return player.playbackState == .playing
   }
 
-  var muted: Bool {
+  public var muted: Bool {
     get {
       if googleCasting, let isMuted = CLIGoogleCastHelper.shared.mediaStatus?.isMuted {
         return isMuted
@@ -768,7 +795,7 @@ extension CLIPlayerController {
     delegate?.playerControllerDidPause?(self)
   }
 
-  func playFromBeginning() {
+  public func playFromBeginning() {
     if googleCasting {
       CLIGoogleCastHelper.shared.remoteMediaClient?.play()
     } else {
