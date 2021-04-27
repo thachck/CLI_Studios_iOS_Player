@@ -11,7 +11,7 @@ class CLIGoogleCastButton: GCKUICastButton {
 
   required init(coder decoder: NSCoder) {
     super.init(coder: decoder)
-    if let inactiveImage = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil), let activeImage = UIImage(named: "chromecast_blue", in: Bundle.cliPlayerBundle, compatibleWith: nil), let loadingImage1 = UIImage(named: "chromecast_loading_s1", in: Bundle.cliPlayerBundle, compatibleWith: nil), let loadingImage2 = UIImage(named: "chromecast_loading_s2", in: Bundle.cliPlayerBundle, compatibleWith: nil) {
+    if let inactiveImage = UIImage.cliPlayerChromeCast, let activeImage = UIImage.cliPlayerChromeCastActive, let loadingImage1 = UIImage.cliPlayerChromeCastLoading1, let loadingImage2 = UIImage.cliPlayerChromeCastLoading2 {
       setInactiveIcon(inactiveImage, activeIcon: activeImage, animationIcons: [loadingImage1, loadingImage2, activeImage])
     }
 

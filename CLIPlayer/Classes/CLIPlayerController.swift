@@ -64,6 +64,8 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerDidPlay(_ player: CLIPlayerController)
   @objc optional func playerControllerDidPause(_ player: CLIPlayerController)
   @objc optional func playerControllerWillStop(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidEnd(_ player: CLIPlayerController)
+  @objc optional func playerControllerMutedDidChange(_ player: CLIPlayerController)
 }
 
 public class CLIPlayerController: UIViewController {
@@ -152,7 +154,7 @@ public class CLIPlayerController: UIViewController {
   public var currentSpeed: Float = 1.0 {
     didSet {
       rate = currentSpeed
-      speedButton.setImage(UIImage(named: String(format: "plyr-speed-%.1fx", currentSpeed), in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+      speedButton.setImage(UIImage.cliPlayerSpeed(currentSpeed), for: .normal)
     }
   }
   public var isMirrored = false {
@@ -356,8 +358,8 @@ public class CLIPlayerController: UIViewController {
     delayHidingControls()
     let newMuted = !muted
     muted = newMuted
-    let imageName = newMuted ? "plyr-muted" : "plyr-volume"
-    volumeButton.setImage(UIImage(named: imageName, in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    let image = newMuted ? UIImage.cliPlayerMuted : UIImage.cliPlayerVolume
+    volumeButton.setImage(image, for: .normal)
   }
 
   @IBAction func qualityButtonTapped(_ sender: Any) {
@@ -392,8 +394,8 @@ public class CLIPlayerController: UIViewController {
   @IBAction func fillModeButtonTapped(_ sender: Any) {
     delayHidingControls()
     player.playerView.playerFillMode = player.playerView.playerFillMode == .resizeAspect ? .resizeAspectFill : .resizeAspect
-    let imageName = player.playerView.playerFillMode == .resizeAspect ? "plyr-enter-fullscreen" : "plyr-exit-fullscreen"
-    fillModeButton.setImage(UIImage(named: imageName, in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+    let image = player.playerView.playerFillMode == .resizeAspect ? UIImage.cliPlayerEnterFullScreen : UIImage.cliPlayerExitFullScreen
+    fillModeButton.setImage(image, for: .normal)
   }
 
   @IBAction func speedButtonTapped(_ sender: Any) {
@@ -432,13 +434,11 @@ extension CLIPlayerController {
     if noControls {
       hideControls(true)
       player.allowsExternalPlayback = false
-      player.autoplay = false
       rewindOverlayContainerView.isHidden = true
       forwardOverlayContainerView.isHidden = true
 
     } else {
       player.allowsExternalPlayback = true
-      player.autoplay = true
       rewindOverlayContainerView.isHidden = false
       forwardOverlayContainerView.isHidden = false
     }
@@ -480,9 +480,9 @@ extension CLIPlayerController {
 
   private func refreshPlayButtonImage() {
     if isPlaying {
-      playButton.setImage(UIImage(named: "plyr-pause", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+      playButton.setImage(UIImage.cliPlayerPause, for: .normal)
     } else {
-      playButton.setImage(UIImage(named: "plyr-play", in: Bundle.cliPlayerBundle, compatibleWith: nil), for: .normal)
+      playButton.setImage(UIImage.cliPlayerPlay, for: .normal)
     }
   }
 
@@ -528,7 +528,7 @@ extension CLIPlayerController {
     output = .GoogleCast
     player.playbackResumesWhenBecameActive = false
     player.playbackResumesWhenEnteringForeground = false
-    externalPlayerImageView.image = UIImage(named: "chromecast_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    externalPlayerImageView.image = UIImage.cliPlayerChromeCast
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "Chrome Cast"
     externalPlayerMaskView.isHidden = false
@@ -549,7 +549,7 @@ extension CLIPlayerController {
     player.playbackResumesWhenEnteringForeground = true
     externalPlayerDeviceLabel.text = " "
     externalPlayerTitleLabel.text = "AirPlay"
-    externalPlayerImageView.image = UIImage(named: "airplay_white", in: Bundle.cliPlayerBundle, compatibleWith: nil)
+    externalPlayerImageView.image = UIImage.cliPlayerAirPlay
     let currentRoute = AVAudioSession.sharedInstance().currentRoute
     for output in currentRoute.outputs {
       if output.portType == AVAudioSession.Port.airPlay {
@@ -657,6 +657,7 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
   }
 
   public func playerPlaybackDidEnd(_ player: Player) {
+    delegate?.playerControllerDidEnd?(self)
     print("playerPlaybackDidEnd")
   }
 
@@ -755,10 +756,12 @@ extension CLIPlayerController {
       } else {
         player.muted = newValue
       }
+
+      delegate?.playerControllerMutedDidChange?(self)
     }
   }
 
-  var currentTimeInterval: TimeInterval {
+  public var currentTimeInterval: TimeInterval {
     get {
       if googleCasting, let mediaStatus = CLIGoogleCastHelper.shared.mediaStatus {
         return mediaStatus.streamPosition
@@ -770,7 +773,7 @@ extension CLIPlayerController {
     }
   }
 
-  var rate: Float {
+  public var rate: Float {
     get {
       if googleCasting, let mediaStatus = CLIGoogleCastHelper.shared.mediaStatus {
         return mediaStatus.playbackRate
@@ -786,7 +789,7 @@ extension CLIPlayerController {
     }
   }
 
-  func pause() {
+  public func pause() {
     if googleCasting {
       CLIGoogleCastHelper.shared.remoteMediaClient?.pause()
     } else {
@@ -804,7 +807,7 @@ extension CLIPlayerController {
     delegate?.playerControllerDidPlay?(self)
   }
 
-  func playFromCurrentTime() {
+  public func playFromCurrentTime() {
     if googleCasting {
       CLIGoogleCastHelper.shared.remoteMediaClient?.play()
     } else {
@@ -853,7 +856,7 @@ extension CLIPlayerController {
     CLIGoogleCastHelper.shared.remoteMediaClient?.seek(with: option)
   }
 
-  func seek(to toTime: TimeInterval, relative: Bool) {
+  public func seek(to toTime: TimeInterval, relative: Bool) {
     if googleCasting {
       seekGoogleCastPlayer(to: toTime, relative: relative)
     } else {
@@ -861,7 +864,7 @@ extension CLIPlayerController {
     }
   }
 
-  func stop() {
+  public func stop() {
     delegate?.playerControllerWillStop?(self)
     if GCKCastContext.sharedInstance().sessionManager.hasConnectedCastSession() {
       GCKCastContext.sharedInstance().sessionManager.endSessionAndStopCasting(true)
