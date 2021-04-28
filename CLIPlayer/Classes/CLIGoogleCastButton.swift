@@ -19,10 +19,10 @@ class CLIGoogleCastButton: GCKUICastButton {
     contentHorizontalAlignment = .fill;
     contentVerticalAlignment = .fill;
     imageView?.contentMode = .scaleAspectFit
-    applyCastStyle()
+    CLIGoogleCastButton.applyCastStyle()
   }
 
-  func applyCastStyle() {
+  class func applyCastStyle() {
     let castStyle = GCKUIStyle.sharedInstance()
 
     castStyle.castViews.backgroundColor = .black
