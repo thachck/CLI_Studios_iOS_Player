@@ -66,6 +66,11 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerWillStop(_ player: CLIPlayerController)
   @objc optional func playerControllerDidEnd(_ player: CLIPlayerController)
   @objc optional func playerControllerMutedDidChange(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidFlip(_ player: CLIPlayerController, isFlipped: Bool)
+  @objc optional func playerControllerDidChangeSpeed(_ player: CLIPlayerController, currentSpeed: Float)
+  @objc optional func playerControllerDidSkipForward(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidSkipBackward(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidChangeFillMode(_ player: CLIPlayerController, resizeAspectFillMode: Bool)
 }
 
 public class CLIPlayerController: UIViewController {
@@ -342,16 +347,19 @@ public class CLIPlayerController: UIViewController {
   @IBAction func rewindButtonTapped(_ sender: Any?) {
     delayHidingControls()
     seek(to: -15, relative: true)
+    delegate?.playerControllerDidSkipBackward?(self)
   }
 
   @IBAction func forwardButtonTapped(_ sender: Any?) {
     delayHidingControls()
     seek(to: 15, relative: true)
+    delegate?.playerControllerDidSkipForward?(self)
   }
 
   @IBAction func mirrorButtonTapped(_ sender: Any) {
     delayHidingControls()
     isMirrored = !isMirrored
+    delegate?.playerControllerDidFlip?(self, isFlipped: isMirrored)
   }
 
   @IBAction func volumeButtonTapped(_ sender: Any) {
@@ -396,6 +404,7 @@ public class CLIPlayerController: UIViewController {
     player.playerView.playerFillMode = player.playerView.playerFillMode == .resizeAspect ? .resizeAspectFill : .resizeAspect
     let image = player.playerView.playerFillMode == .resizeAspect ? UIImage.cliPlayerEnterFullScreen : UIImage.cliPlayerExitFullScreen
     fillModeButton.setImage(image, for: .normal)
+    delegate?.playerControllerDidChangeFillMode?(self, resizeAspectFillMode: player.playerView.playerFillMode == .resizeAspectFill)
   }
 
   @IBAction func speedButtonTapped(_ sender: Any) {
@@ -406,7 +415,10 @@ public class CLIPlayerController: UIViewController {
     modalController.items = speeds.map { (speed) -> SelectorModalItem in
       let title = speed == 1 ? "Normal" : "\(speed)x"
       return SelectorModalItem(title: title, selected: currentSpeed == speed) { [weak self] _ in
-        self?.currentSpeed = speed
+        if let self = self {
+          self.currentSpeed = speed
+          self.delegate?.playerControllerDidChangeSpeed?(self, currentSpeed: speed)
+        }
       }
     }
 
