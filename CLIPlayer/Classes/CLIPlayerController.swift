@@ -673,6 +673,9 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
 //MARK: Google Cast Listeners
 extension CLIPlayerController: GCKSessionManagerListener {
   public func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
+    if noControls {
+      return
+    }
     print("didStart session: GCKCastSession", session)
     session.remoteMediaClient?.add(self)
     player.pause()
@@ -694,6 +697,9 @@ extension CLIPlayerController: GCKSessionManagerListener {
 
 
   public func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKCastSession, withError error: Error?) {
+    if noControls {
+      return
+    }
     let currentTime = googleCastController?.lastKnownStreamPosition
     googleCastController?.streamPositionSlider = nil
     googleCastController?.streamPositionLabel = nil
@@ -718,6 +724,9 @@ extension CLIPlayerController: GCKSessionManagerListener {
 
 extension CLIPlayerController: GCKRemoteMediaClientListener {
   public func remoteMediaClient(_ client: GCKRemoteMediaClient, didStartMediaSessionWithID sessionID: Int) {
+    if noControls {
+      return
+    }
     rate = currentSpeed
     seek(to: player.currentTimeInterval, relative: false)
   }
@@ -725,6 +734,9 @@ extension CLIPlayerController: GCKRemoteMediaClientListener {
 
 extension CLIPlayerController: GCKUIMediaControllerDelegate {
   public func mediaController(_ mediaController: GCKUIMediaController, didUpdate playerState: GCKMediaPlayerState, lastStreamPosition streamPosition: TimeInterval) {
+    if noControls {
+      return
+    }
     refreshPlayButtonImage()
   }
 }
