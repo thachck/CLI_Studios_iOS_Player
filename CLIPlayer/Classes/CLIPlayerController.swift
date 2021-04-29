@@ -225,14 +225,18 @@ public class CLIPlayerController: UIViewController {
   }
 
   @objc func applicationDidBecomeActive() {
-    if player.isExternalPlaybackActive {
-      refreshPlayerForAirplay()
-    } else {
-      refreshInternalPlayer()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+      if let self = self {
+        if self.googleCasting {
+          self.refreshPlayerForGoogleCast()
+        } else if self.player.isExternalPlaybackActive {
+          self.refreshPlayerForAirplay()
+        } else {
+          self.refreshInternalPlayer()
+        }
+      }
     }
-    if googleCasting {
-      refreshPlayerForGoogleCast()
-    }
+
   }
 
   public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
