@@ -576,7 +576,7 @@ extension CLIPlayerController {
     externalPlayerMaskView.isHidden = false
     mirrorButton.isHidden = true
     fillModeButton.isHidden = true
-    googleCastButton.isHidden = true
+    googleCastButton.forceHidden = true
     rate = currentSpeed
   }
 
@@ -591,7 +591,7 @@ extension CLIPlayerController {
     player.playbackResumesWhenEnteringForeground = true
     externalPlayerMaskView.isHidden = true
     mirrorButton.isHidden = false
-    googleCastButton.isHidden = false
+    googleCastButton.forceHidden = nil
     fillModeButton.isHidden = false
     airPlayButton.forceHidden = nil
     airPlayButton.showIfAvailable()

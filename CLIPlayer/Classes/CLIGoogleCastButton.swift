@@ -19,6 +19,7 @@ class CLIGoogleCastButton: GCKUICastButton {
     contentHorizontalAlignment = .fill;
     contentVerticalAlignment = .fill;
     imageView?.contentMode = .scaleAspectFit
+    _isHidden = isHidden
     CLIGoogleCastButton.applyCastStyle()
   }
 
@@ -57,5 +58,29 @@ class CLIGoogleCastButton: GCKUICastButton {
 
     // Refresh all currently visible views with the assigned styles.
     castStyle.apply()
+  }
+
+  var forceHidden: Bool? {
+    didSet {
+      if let forceHidden = forceHidden {
+        super.isHidden = forceHidden
+      } else {
+        super.isHidden = _isHidden
+      }
+    }
+  }
+
+  var _isHidden: Bool = false
+
+  override var isHidden: Bool {
+    get {
+      super.isHidden
+    }
+    set {
+      _isHidden = newValue
+      if forceHidden == nil {
+        super.isHidden = newValue
+      }
+    }
   }
 }
