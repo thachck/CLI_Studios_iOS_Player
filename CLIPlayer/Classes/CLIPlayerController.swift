@@ -595,6 +595,7 @@ extension CLIPlayerController {
     fillModeButton.isHidden = false
     airPlayButton.forceHidden = nil
     airPlayButton.showIfAvailable()
+    progressSlider.isEnabled = true
     reloadQualitySetting()
     rate = currentSpeed
   }
