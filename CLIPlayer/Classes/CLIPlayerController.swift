@@ -846,6 +846,9 @@ extension CLIPlayerController {
   }
 
   func delaySeekInternalPlayer(toTime: TimeInterval) {
+    if toTime.isNaN {
+      return
+    }
     if let delaySeekTimer = delaySeekTimer {
       delaySeekTimer.invalidate()
     }
@@ -866,7 +869,7 @@ extension CLIPlayerController {
   }
 
   func seekInternalPlayer(to toTime: TimeInterval, relative: Bool) {
-    if toTime.isNaN {
+    if toTime.isNaN || player.maximumDuration.isNaN {
       return
     }
     let currentTimeInterval = estimatedCurrentTime ?? player.currentTimeInterval
