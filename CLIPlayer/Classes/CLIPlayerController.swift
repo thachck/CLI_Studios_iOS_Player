@@ -71,6 +71,7 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerDidSkipForward(_ player: CLIPlayerController)
   @objc optional func playerControllerDidSkipBackward(_ player: CLIPlayerController)
   @objc optional func playerControllerDidChangeFillMode(_ player: CLIPlayerController, resizeAspectFillMode: Bool)
+  @objc optional func playerControllerDidChangeQuality(_ player: CLIPlayerController, quality: String)
 }
 
 public class CLIPlayerController: UIViewController {
@@ -382,6 +383,7 @@ public class CLIPlayerController: UIViewController {
       let title = quality.title
       return SelectorModalItem(title: title, selected: quality == currentQuality) { [weak self] _ in
         self?.currentQuality = quality
+        self?.delegate?.playerControllerDidChangeQuality?(self!, quality: quality.title)
       }
     }
     
