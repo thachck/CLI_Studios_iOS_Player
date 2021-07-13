@@ -178,6 +178,7 @@
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LaN-za-4zF" userLabel="Rewind" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Rewind Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="LaN-za-4zF" secondAttribute="height" multiplier="1:1" id="pPO-tZ-aJX"/>
                                                                 </constraints>
@@ -193,6 +194,7 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Nn-gZ-GyP" userLabel="Play" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="44" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Play Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="0Nn-gZ-GyP" secondAttribute="height" multiplier="1:1" id="wKG-0i-uDI"/>
                                                                 </constraints>
@@ -206,6 +208,7 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mLQ-ZV-MW8" userLabel="Forward" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="88" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Forward Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="mLQ-ZV-MW8" secondAttribute="height" multiplier="1:1" id="2ki-cS-KFn"/>
                                                                 </constraints>
@@ -221,6 +224,7 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vrM-dU-59k" userLabel="Volume" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="132" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Volume Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="vrM-dU-59k" secondAttribute="height" multiplier="1:1" id="1q8-ao-0Ec"/>
                                                                 </constraints>
@@ -238,6 +242,7 @@
                                                             </view>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T35-an-rFp" userLabel="Speed" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="495.5" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Speed Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="T35-an-rFp" secondAttribute="height" multiplier="1:1" id="gOC-KV-Pkt"/>
                                                                 </constraints>
@@ -251,6 +256,7 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Laf-nC-cfn" userLabel="Mirror" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="539.5" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Flip Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="Laf-nC-cfn" secondAttribute="height" multiplier="1:1" id="7Y3-NE-meq"/>
                                                                 </constraints>
@@ -264,6 +270,7 @@
                                                             </button>
                                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g26-2k-uEe" userLabel="Quality" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="581.5" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Quality Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="g26-2k-uEe" secondAttribute="height" multiplier="1:1" id="fGL-0Z-cHF"/>
                                                                 </constraints>
@@ -276,6 +283,7 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kUy-QP-kW2" userLabel="fill mode" customClass="CLIControlButton" customModule="CLIPlayer" customModuleProvider="target">
                                                                 <rect key="frame" x="583.5" y="0.0" width="40" height="40"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Fill Mode Button"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="kUy-QP-kW2" secondAttribute="height" multiplier="1:1" id="ktX-Jm-b0n"/>
                                                                 </constraints>
@@ -299,6 +307,7 @@
                                                                     </view>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yL5-pL-uAd">
                                                                         <rect key="frame" x="6" y="0.0" width="149.5" height="40"/>
+                                                                        <accessibility key="accessibilityConfiguration" label="CLI Player - End Class Button"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="40" id="0Gp-za-7Qe"/>
                                                                             <constraint firstAttribute="width" secondItem="yL5-pL-uAd" secondAttribute="height" multiplier="56:15" id="3W6-zn-NOF"/>
@@ -347,6 +356,7 @@
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Class Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ouv-dY-edg">
                                                                 <rect key="frame" x="0.0" y="0.0" width="162.5" height="17"/>
+                                                                <accessibility key="accessibilityConfiguration" label="CLI Player - Class Name Label"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
@@ -367,6 +377,7 @@ Contemporary | Intermediate </string>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaL-Yg-yJQ" customClass="CLIGoogleCastButton" customModule="CLIPlayer" customModuleProvider="target">
                                                         <rect key="frame" x="644" y="10" width="40" height="40"/>
+                                                        <accessibility key="accessibilityConfiguration" label="CLI Player - Google Cast Button"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="gaL-Yg-yJQ" secondAttribute="height" multiplier="1:1" id="GYo-7c-fhl"/>
                                                             <constraint firstAttribute="width" constant="40" id="ogh-Bt-Cba"/>
@@ -379,6 +390,7 @@ Contemporary | Intermediate </string>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mia-cI-1mX" customClass="CLIAirPlayButton" customModule="CLIPlayer" customModuleProvider="target">
                                                         <rect key="frame" x="688" y="10" width="40" height="40"/>
+                                                        <accessibility key="accessibilityConfiguration" label="CLI Air Play Button"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="40" id="876-LB-fFC"/>
                                                             <constraint firstAttribute="width" secondItem="mia-cI-1mX" secondAttribute="height" multiplier="1:1" id="NsI-lq-Y0o"/>
@@ -393,6 +405,7 @@ Contemporary | Intermediate </string>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Svs-Rj-Cdk">
                                                         <rect key="frame" x="732" y="0.0" width="40" height="60"/>
+                                                        <accessibility key="accessibilityConfiguration" label="CLI Player - Close Button"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="40" id="BwD-wv-Qsl"/>
                                                         </constraints>
