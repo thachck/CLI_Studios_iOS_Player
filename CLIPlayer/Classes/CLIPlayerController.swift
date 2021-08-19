@@ -792,6 +792,20 @@ extension CLIPlayerController {
     }
   }
 
+  public var playbackLoops: Bool {
+    get {
+      if googleCasting {
+        return false
+      }
+      return player.playbackLoops
+    }
+    set {
+      if !googleCasting {
+        player.playbackLoops = newValue
+      }
+    }
+  }
+
   public var currentTimeInterval: TimeInterval {
     get {
       if googleCasting, let mediaStatus = CLIGoogleCastHelper.shared.mediaStatus {
