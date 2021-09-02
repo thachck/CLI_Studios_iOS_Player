@@ -302,6 +302,8 @@ public class CLIPlayerController: UIViewController {
 
   private func initPlayer() {
     player = Player()
+    player.playbackResumesWhenBecameActive = false
+    player.playbackResumesWhenEnteringForeground = false
     player.playerDelegate = self
     player.playbackDelegate = self
     player.view.frame = playerContainerView.bounds
@@ -589,8 +591,8 @@ extension CLIPlayerController {
     output = .InternalPlayer
     player.playbackPausesWhenBackgrounded = true
     player.playbackPausesWhenResigningActive = true
-    player.playbackResumesWhenBecameActive = true
-    player.playbackResumesWhenEnteringForeground = true
+    player.playbackResumesWhenBecameActive = false
+    player.playbackResumesWhenEnteringForeground = false
     externalPlayerMaskView.isHidden = true
     mirrorButton.isHidden = false
     googleCastButton.forceHidden = nil
