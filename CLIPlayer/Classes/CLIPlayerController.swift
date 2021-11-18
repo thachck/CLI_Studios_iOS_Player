@@ -65,6 +65,7 @@ public enum CLIPlayerOutput {
   @objc optional func playerControllerDidPause(_ player: CLIPlayerController)
   @objc optional func playerControllerWillStop(_ player: CLIPlayerController)
   @objc optional func playerControllerDidEnd(_ player: CLIPlayerController)
+  @objc optional func playerControllerDidPlayToEndTime(_ player: CLIPlayerController)
   @objc optional func playerControllerMutedDidChange(_ player: CLIPlayerController)
   @objc optional func playerControllerDidFlip(_ player: CLIPlayerController, isFlipped: Bool)
   @objc optional func playerControllerDidChangeSpeed(_ player: CLIPlayerController, currentSpeed: Float)
@@ -688,6 +689,10 @@ extension CLIPlayerController: PlayerDelegate, PlayerPlaybackDelegate {
 
   public func playerPlaybackDidLoop(_ player: Player) {
     print("playerPlaybackDidLoop")
+  }
+
+  public func playerDidPlayToEndTime(_ player: Player) {
+    delegate?.playerControllerDidPlayToEndTime?(self)
   }
 }
 
